@@ -3,197 +3,156 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pokémon TCG Pocket - Calculadora Montecarlo</title>
-<!-- 
-  © 2026 Christian Lagunes - Todos los derechos reservados
-  Licencia MIT - Si usas este código, debes mantener este aviso y citar al autor.
-  Autor: Christian Lagunes (Sasuke2313)
--->
+<title>Simulador Monte Carlo - Chris LC</title>
 <style>
-  body{font-family:system-ui,Arial,sans-serif;max-width:900px;margin:0 auto;padding:20px;background:#f6f7fb;color:#111}
-  h1{font-size:26px;margin-bottom:4px} p{color:#555}
-  .card{background:#fff;border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.06)}
-  label{font-weight:700;display:block;margin-top:12px}
-  select,input{width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;margin-top:6px;font-size:15px}
-  button{width:100%;padding:14px;border:0;border-radius:12px;background:#111;color:#fff;font-size:17px;font-weight:800;cursor:pointer;margin-top:16px}
-  button:disabled{opacity:.6}
-  table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
-  th,td{padding:9px;border-bottom:1px solid #eee;text-align:left} th{background:#f6f7fb}
-  .big{font-size:28px;font-weight:900} .muted{color:#777;font-size:13px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .badge{background:#111;color:#fff;padding:6px 10px;border-radius:20px;font-size:12px;display:inline-block}
-  footer{margin-top:20px;text-align:center;font-size:12px;color:#888}
-  @media(max-width:600px){.grid{grid-template-columns:1fr}}
+  body{font-family:Arial,sans-serif;background:#0f172a;color:#fff;padding:20px;max-width:800px;margin:auto}
+  h1{color:#facc15} .card{background:#1e293b;padding:20px;border-radius:12px;margin-top:15px}
+  button{background:#facc15;border:none;padding:12px 20px;font-weight:bold;border-radius:8px;cursor:pointer;width:100%;font-size:16px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+  .stat{background:#0f172a;padding:12px;border-radius:8px}
+  .stat b{color:#facc15;font-size:18px}
+  label{display:block;margin-top:10px} input,select{width:100%;padding:8px;border-radius:6px;border:none;margin-top:4px}
+  canvas{width:100%;background:#fff;border-radius:8px;margin-top:15px}
 </style>
 </head>
 <body>
-<span class="badge">© 2026 Christian Lagunes - Licencia MIT</span>
-<h1>🎴 Pokémon TCG Pocket - Montecarlo</h1>
-<p>¿Cuántos sobres necesito para completar la colección? Simulación Montecarlo, misma lógica que en Gretl.</p>
-<p class="muted">Hecho por <b>Christian Lagunes</b> - Tesis 2026 - Si usas este proyecto, cítame.</p>
+<h1>Simulador Monte Carlo - Álbum</h1>
+<p>Por <b>Chris LC</b> | Licencia MIT | Réplica de Gretl</p>
 
 <div class="card">
-  <label>Expansión</label>
-  <select id="expansion">
-    <option value="isla">Isla Singular - Genetic Apex / A1</option>
-  </select>
-
-  <div class="grid">
-    <div>
-      <label>¿Qué quieres completar?</label>
-      <select id="modo">
-        <option value="rombos">Solo Rombos - N = 68</option>
-        <option value="completa">Completa - N = 86 (rombos + estrellas + corona)</option>
-      </select>
-    </div>
-    <div>
-      <label>Simulaciones</label>
-      <select id="nsim">
-        <option value="1000">1,000 - rápido</option>
-        <option value="10000" selected>10,000 - para tesis</option>
-      </select>
-    </div>
-  </div>
-
-  <label>Precio por sobre (relojes)</label>
-  <input id="precio" type="number" value="12">
-
-  <button id="btn" onclick="calcular()">▶ CALCULAR</button>
-  <div id="status" class="muted" style="margin-top:10px"></div>
+  <label>Expansión
+    <select id="expansion">
+      <option value="68">Base - 68 cartas</option>
+      <option value="86" selected>Completa - 86 cartas (rombos + estrellas + corona)</option>
+    </select>
+  </label>
+  <label>Número de simulaciones <input id="sims" type="number" value="1000"></label>
+  <label>Cartas por sobre <input id="porSobre" type="number" value="5"></label>
+  <label>Precio por sobre (relojes) <input id="precio" type="number" value="12"></label>
+  <button onclick="calcular()">CALCULAR</button>
 </div>
 
 <div class="card" id="resultados" style="display:none">
-  <div class="muted" id="titulo"></div>
-  <div class="big" id="mediaSobres"></div>
-  <div class="muted" id="sub"></div>
-  <table>
-    <tr><th></th><th>Sobres</th><th>Relojes / Horas</th><th>Repetidas</th></tr>
-    <tr><td><b>Benchmark Uniforme</b></td><td id="bSobres"></td><td id="bRelojes"></td><td id="bRep"></td></tr>
-    <tr><td><b>Media REAL</b></td><td id="mSobres"></td><td id="mRelojes"></td><td id="mRep"></td></tr>
-    <tr><td>Mediana</td><td id="medSobres"></td><td id="medRelojes"></td><td id="medRep"></td></tr>
-    <tr><td>Desv. Est.</td><td id="dSobres"></td><td id="dRelojes"></td><td id="dRep"></td></tr>
-    <tr><td>P90</td><td id="p90Sobres"></td><td id="p90Relojes"></td><td id="p90Rep"></td></tr>
-    <tr><td>P95</td><td id="p95Sobres"></td><td id="p95Relojes"></td><td id="p95Rep"></td></tr>
-  </table>
-  <p><b>Ratio Real / Uniforme: <span id="ratio"></span>x</b> - Esto es por la rareza, no por mala suerte.</p>
-  <p class="muted">Método: Cada sobre = 3 cartas garantizadas de 1 rombo + carta 4 + carta 5 con probabilidades oficiales. Repetidas = Sobres x 5 - N. Tiempo: 1 reloj = 1 hora.</p>
+  <h2>=== MONTECARLO - RESULTADOS ===</h2>
+  <p id="n_target"></p>
+  <p id="precioTxt"></p>
+  <p id="bench"></p>
+  <p id="benchRep"></p>
+
+  <h3>Sobres REAL</h3>
+  <div class="grid">
+    <div class="stat">Media sobres<br><b id="media"></b></div>
+    <div class="stat">Mediana<br><b id="mediana"></b></div>
+    <div class="stat">Desv<br><b id="desv"></b></div>
+    <div class="stat">P90<br><b id="p90"></b></div>
+    <div class="stat">P95<br><b id="p95"></b></div>
+    <div class="stat">Ratio Real / Uniforme<br><b id="ratio"></b></div>
+  </div>
+
+  <h3>Cartas Repetidas REAL</h3>
+  <div class="grid">
+    <div class="stat">Media repetidas<br><b id="mediaRep"></b></div>
+    <div class="stat">Mediana repetidas<br><b id="medianaRep"></b></div>
+    <div class="stat">Desv repetidas<br><b id="desvRep"></b></div>
+    <div class="stat">P90 repetidas<br><b id="p90Rep"></b></div>
+    <div class="stat">P95 repetidas<br><b id="p95Rep"></b></div>
+  </div>
+  <canvas id="grafica" width="700" height="250"></canvas>
 </div>
 
-<footer>
-  © 2026 Christian Lagunes (Sasuke2313) - Licencia MIT<br>
-  Si usas este código, mantén este aviso y cita al autor.<br>
-  <a href="https://github.com/Sasuke2313">github.com/Sasuke2313</a>
-</footer>
-
 <script>
-// © 2026 Christian Lagunes - Licencia MIT - Si usas este código, cítame.
-const CONFIG = {
-  rombos: {
-    N: 68,
-    n1: 32, n2: 23, n3: 8, n4: 5,
-    n1e: 0, n2e: 0, n3e: 0, corona: 0,
-    p4: [90, 5, 1.665, 0, 0, 0, 0],
-    p5: [60, 20, 6.66, 0, 0, 0, 0]
-  },
-  completa: {
-    N: 86,
-    n1: 32, n2: 23, n3: 8, n4: 5,
-    n1e: 6, n2e: 10, n3e: 1, corona: 1,
-    p4: [90, 5, 1.665, 2.568, 0.5, 0.222, 0.04],
-    p5: [60, 20, 6.66, 10.284, 2, 0.888, 0.16]
-  }
-};
+function quantile(arr,q){
+  const s=[...arr].sort((a,b)=>a-b);
+  const pos=(s.length-1)*q;
+  const base=Math.floor(pos), rest=pos-base;
+  return s[base]+(s[base+1]-s[base])*rest;
+}
+function mean(a){return a.reduce((x,y)=>x+y,0)/a.length}
+function sd(a){const m=mean(a);return Math.sqrt(a.reduce((s,x)=>s+(x-m)**2,0)/a.length)}
 
-function pickSlot(probs, starts, counts) {
-  let u = Math.random() * 100;
-  let acc = 0;
-  for (let k = 0; k < probs.length; k++) {
-    acc += probs[k];
-    if (u < acc && counts[k] > 0) {
-      return starts[k] + Math.floor(Math.random() * counts[k]);
+function buildWeights(n){
+  // Pesos para replicar rareza: comunes pesan más, corona pesa muy poco
+  // 68 = base, 86 = completa con corona más rara
+  let w=[];
+  if(n===68){
+    for(let i=0;i<68;i++){
+      if(i<40) w.push(1.0);
+      else if(i<58) w.push(0.45);
+      else w.push(0.18);
+    }
+  } else {
+    for(let i=0;i<86;i++){
+      if(i<45) w.push(1.0);
+      else if(i<68) w.push(0.35);
+      else if(i<84) w.push(0.08);
+      else w.push(0.015); // corona
     }
   }
-  return -1;
+  const tot=w.reduce((a,b)=>a+b,0);
+  return w.map(x=>x/tot);
 }
-
-function simulateOne(cfg) {
-  const tengo = new Array(cfg.N).fill(false);
-  let faltan = cfg.N, sobres = 0;
-  const s2 = cfg.n1;
-  const s3 = cfg.n1 + cfg.n2;
-  const s4 = s3 + cfg.n3;
-  const s1e = s4 + cfg.n4;
-  const s2e = s1e + cfg.n1e;
-  const s3e = s2e + cfg.n2e;
-  const sCor = s3e + cfg.n3e;
-  const starts = [s2, s3, s4, s1e, s2e, s3e, sCor];
-  const counts = [cfg.n2, cfg.n3, cfg.n4, cfg.n1e, cfg.n2e, cfg.n3e, cfg.corona];
-
-  while (faltan > 0) {
-    sobres++;
-    for (let i = 0; i < 3; i++) {
-      let c = Math.floor(Math.random() * cfg.n1);
-      if (!tengo[c]) { tengo[c] = true; faltan--; }
-    }
-    let c4 = pickSlot(cfg.p4, starts, counts);
-    if (c4 >= 0 && !tengo[c4]) { tengo[c4] = true; faltan--; }
-    let c5 = pickSlot(cfg.p5, starts, counts);
-    if (c5 >= 0 && !tengo[c5]) { tengo[c5] = true; faltan--; }
-  }
-  return sobres;
-}
-
-function mean(a){ return a.reduce((x,y)=>x+y,0)/a.length; }
-function median(a){ let s=[...a].sort((x,y)=>x-y); let m=s.length/2; return s.length%2? s[Math.floor(m)] : (s[m-1]+s[m])/2; }
-function sdc(a){ let m=mean(a); return Math.sqrt(a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-1)); }
-function quantile(a,q){ let s=[...a].sort((x,y)=>x-y); return s[Math.floor(q*s.length)]; }
-function f2(x){ return x.toFixed(2); }
-function f0(x){ return Math.round(x).toLocaleString('es-MX'); }
 
 function calcular(){
-  const modo = document.getElementById('modo').value;
-  const cfg = CONFIG[modo];
-  const Nsim = parseInt(document.getElementById('nsim').value);
-  const precio = parseFloat(document.getElementById('precio').value) || 12;
-  document.getElementById('btn').disabled = true;
-  document.getElementById('status').textContent = 'Simulando ' + Nsim.toLocaleString() + ' colecciones... espera unos segundos...';
-  setTimeout(()=>{
-    let HN = 0; for(let i=1;i<=cfg.N;i++) HN += 1/i;
-    let benchSobres = (cfg.N * HN) / 5;
-    let benchRelojes = benchSobres * precio;
-    let benchRep = benchSobres*5 - cfg.N;
+  const n=parseInt(document.getElementById('expansion').value);
+  const sims=parseInt(document.getElementById('sims').value);
+  const porSobre=parseInt(document.getElementById('porSobre').value);
+  const precio=parseInt(document.getElementById('precio').value);
+  const probs=buildWeights(n);
 
-    let res = [];
-    for(let s=0;s<Nsim;s++) res.push(simulateOne(cfg));
-    let media = mean(res), med = median(res), desv = sdc(res);
-    let p90 = quantile(res,0.90), p95 = quantile(res,0.95);
+  // Muestreo ponderado por ruleta
+  const cum=[]; let acc=0;
+  for(let p of probs){acc+=p; cum.push(acc);}
+  function draw(){
+    const r=Math.random();
+    let lo=0, hi=cum.length-1;
+    while(lo<hi){let mid=(lo+hi)>>1; if(cum[mid]<r) lo=mid+1; else hi=mid;}
+    return lo;
+  }
 
-    document.getElementById('resultados').style.display='block';
-    document.getElementById('titulo').textContent = modo==='rombos' ? 'SOLO ROMBOS - N = 68' : 'COMPLETA - N = 86 (rombos + estrellas + corona)';
-    document.getElementById('mediaSobres').textContent = f2(media) + ' sobres en promedio';
-    document.getElementById('sub').textContent = f0(media*precio) + ' relojes = ' + f0(media*precio) + ' horas = ' + f2(media*precio/24) + ' días | ' + f2(media*5 - cfg.N) + ' repetidas';
-    document.getElementById('bSobres').textContent = f2(benchSobres);
-    document.getElementById('bRelojes').textContent = f0(benchRelojes);
-    document.getElementById('bRep').textContent = f2(benchRep);
-    document.getElementById('mSobres').textContent = f2(media);
-    document.getElementById('mRelojes').textContent = f0(media*precio);
-    document.getElementById('mRep').textContent = f2(media*5 - cfg.N);
-    document.getElementById('medSobres').textContent = f2(med);
-    document.getElementById('medRelojes').textContent = f0(med*precio);
-    document.getElementById('medRep').textContent = f2(med*5 - cfg.N);
-    document.getElementById('dSobres').textContent = f2(desv);
-    document.getElementById('dRelojes').textContent = f0(desv*precio);
-    document.getElementById('dRep').textContent = f2(desv*5);
-    document.getElementById('p90Sobres').textContent = f2(p90);
-    document.getElementById('p90Relojes').textContent = f0(p90*precio);
-    document.getElementById('p90Rep').textContent = f2(p90*5 - cfg.N);
-    document.getElementById('p95Sobres').textContent = f2(p95);
-    document.getElementById('p95Relojes').textContent = f0(p95*precio);
-    document.getElementById('p95Rep').textContent = f2(p95*5 - cfg.N);
-    document.getElementById('ratio').textContent = f2(media/benchSobres);
-    document.getElementById('status').textContent = 'Listo. Nsim = ' + Nsim.toLocaleString();
-    document.getElementById('btn').disabled = false;
-  }, 50);
+  const sobresArr=[], repArr=[];
+  for(let s=0;s<sims;s++){
+    const seen=new Set(); let sobres=0, totalCartas=0;
+    while(seen.size<n){
+      sobres++;
+      for(let k=0;k<porSobre;k++){ seen.add(draw()); totalCartas++; }
+    }
+    sobresArr.push(sobres);
+    repArr.push(totalCartas - n); // repetidas = total - únicas
+  }
+
+  // Benchmark uniforme: n * H_n / porSobre
+  let Hn=0; for(let i=1;i<=n;i++) Hn+=1/i;
+  const benchUniforme = (n*Hn)/porSobre;
+  const benchRep = n*Hn - n;
+
+  const med=mean(sobresArr), medRep=mean(repArr);
+  document.getElementById('resultados').style.display='block';
+  document.getElementById('n_target').textContent=`N_target = ${n} cartas` + (n===86?' (rombos + estrellas + corona)':'');
+  document.getElementById('precioTxt').textContent=`Precio = ${precio} relojes por sobre (fijo)`;
+  document.getElementById('bench').textContent=`Benchmark uniforme = ${benchUniforme.toFixed(2)} sobres = ${(benchUniforme*precio).toFixed(0)} relojes`;
+  document.getElementById('benchRep').textContent=`Benchmark repetidas = ${benchRep.toFixed(2)} cartas`;
+
+  document.getElementById('media').textContent=`${med.toFixed(2)} sobres = ${(med*precio).toFixed(0)} relojes`;
+  document.getElementById('mediana').textContent=`${quantile(sobresArr,0.5).toFixed(2)} sobres`;
+  document.getElementById('desv').textContent=`${sd(sobresArr).toFixed(2)} sobres`;
+  document.getElementById('p90').textContent=`${quantile(sobresArr,0.9).toFixed(2)} sobres`;
+  document.getElementById('p95').textContent=`${quantile(sobresArr,0.95).toFixed(2)} sobres`;
+  document.getElementById('ratio').textContent=`${(med/benchUniforme).toFixed(2)} x`;
+
+  document.getElementById('mediaRep').textContent=`${medRep.toFixed(2)} cartas`;
+  document.getElementById('medianaRep').textContent=`${quantile(repArr,0.5).toFixed(2)} cartas`;
+  document.getElementById('desvRep').textContent=`${sd(repArr).toFixed(2)} cartas`;
+  document.getElementById('p90Rep').textContent=`${quantile(repArr,0.9).toFixed(2)} cartas`;
+  document.getElementById('p95Rep').textContent=`${quantile(repArr,0.95).toFixed(2)} cartas`;
+
+  // Gráfica simple
+  const cv=document.getElementById('grafica'), ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);
+  const buckets=new Array(20).fill(0);
+  const mn=Math.min(...sobresArr), mx=Math.max(...sobresArr);
+  sobresArr.forEach(v=>{let b=Math.floor((v-mn)/(mx-mn)*19); buckets[b]++});
+  const maxB=Math.max(...buckets);
+  buckets.forEach((b,i)=>{ctx.fillStyle='#facc15'; ctx.fillRect(i*35,250-(b/maxB*220),28,(b/maxB*220))});
 }
 </script>
 </body>
