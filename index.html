@@ -22,8 +22,10 @@
 <div class="card">
   <label>Expansión
     <select id="expansion">
-      <option value="68">Base - 68 cartas</option>
-      <option value="86" selected>Completa - 86 cartas (rombos + estrellas + corona)</option>
+     <option value="68">Isla Singular - Solo Rombos - 68 cartas</option>
+     <option value="86">Isla Singular - Completa - 86 cartas</option>
+     <option value="75">Luz Triunfal - Solo Rombos - 75 cartas</option>
+     <option value="96">Luz Triunfal - Completa - 96 cartas</option>
     </select>
   </label>
   <label>Número de simulaciones <input id="sims" type="number" value="1000"></label>
@@ -69,10 +71,32 @@ function quantile(arr,q){
 }
 function mean(a){return a.reduce((x,y)=>x+y,0)/a.length}
 function sd(a){const m=mean(a);return Math.sqrt(a.reduce((s,x)=>s+(x-m)**2,0)/a.length)}
-
+function drawCarta123_Luz(){
+  return Math.floor(Math.random()*31);
+}
+function drawCarta4_Luz(){
+  const r = Math.random()*100;
+  if(r < 0.040) return 95;
+  if(r < 0.262) return 94;
+  if(r < 0.762) return 81 + Math.floor(Math.random()*13);
+  if(r < 3.334) return 75 + Math.floor(Math.random()*6);
+  if(r < 5.000) return 70 + Math.floor(Math.random()*5);
+  if(r < 10.000) return 57 + Math.floor(Math.random()*13);
+  return 31 + Math.floor(Math.random()*26);
+}
+function drawCarta5_Luz(){
+  const r = Math.random()*100;
+  if(r < 0.160) return 95;
+  if(r < 1.048) return 94;
+  if(r < 3.048) return 81 + Math.floor(Math.random()*13);
+  if(r < 13.336) return 75 + Math.floor(Math.random()*6);
+  if(r < 20.000) return 70 + Math.floor(Math.random()*5);
+  if(r < 40.000) return 57 + Math.floor(Math.random()*13);
+  return 31 + Math.floor(Math.random()*26);
+}
 function buildWeights(n){
   // Pesos para replicar rareza: comunes pesan más, corona pesa muy poco
-  // 68 = base, 86 = completa con corona más rara
+  // 68 = Isla solo rombos, 86 = isla completa, 75 = Luz solo rombos, 96 = Luz completa 
   let w=[];
   if(n===68){
     for(let i=0;i<68;i++){
@@ -114,7 +138,21 @@ function calcular(){
     const seen=new Set(); let sobres=0, totalCartas=0;
     while(seen.size<n){
       sobres++;
-      for(let k=0;k<porSobre;k++){ seen.add(draw()); totalCartas++; }
+     if(n===75){
+  let c1=drawCarta123_Luz(); if(c1<75) seen.add(c1); totalCartas++;
+  let c2=drawCarta123_Luz(); if(c2<75) seen.add(c2); totalCartas++;
+  let c3=drawCarta123_Luz(); if(c3<75) seen.add(c3); totalCartas++;
+  let c4=drawCarta4_Luz(); if(c4<75) seen.add(c4); totalCartas++;
+  let c5=drawCarta5_Luz(); if(c5<75) seen.add(c5); totalCartas++;
+} else if(n===96){
+  seen.add(drawCarta123_Luz()); totalCartas++;
+  seen.add(drawCarta123_Luz()); totalCartas++;
+  seen.add(drawCarta123_Luz()); totalCartas++;
+  seen.add(drawCarta4_Luz()); totalCartas++;
+  seen.add(drawCarta5_Luz()); totalCartas++;
+} else {
+  for(let k=0;k<porSobre;k++){ seen.add(draw()); totalCartas++; }
+}
     }
     sobresArr.push(sobres);
     repArr.push(totalCartas - n); // repetidas = total - únicas
