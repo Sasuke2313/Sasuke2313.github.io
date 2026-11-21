@@ -17,6 +17,8 @@
 </head>
 <body>
 <h1>Simulador Monte Carlo Tcgp </h1>
+<p style="color:#000;font-weight:bold;">Simula miles de aperturas de sobres y descubre tu probabilidad real de completar el álbum de Pokémon TCG Pocket sin gastar de más.</p>
+<p id="faltanSobres" style="background:#FFFFFF;border:2px solid #000;border-radius:12px;padding:12px;color:#000;font-weight:bold;text-align:center;">Aquí te diré cuántos sobres te faltan</p>
 <p>Por <b>Chris LC</b> | Licencia MIT </p>
 
 <div class="card">
@@ -31,6 +33,7 @@
   <label>Número de simulaciones <input id="sims" type="number" value="1000"></label>
   <label>Cartas por sobre <input id="porSobre" type="number" value="5"></label>
   <label>Precio por sobre (relojes) <input id="precio" type="number" value="12"></label>
+  <label>¿Cuántas cartas ya tienes? <input id="tienes" type="number" value="0"></label>
   <button onclick="calcular()">CALCULAR</button>
 </div>
 
@@ -122,7 +125,10 @@ function calcular(){
   const porSobre=parseInt(document.getElementById('porSobre').value);
   const precio=parseInt(document.getElementById('precio').value);
   const probs=buildWeights(n);
-
+  const tienes = parseInt(document.getElementById('tienes').value) || 0;
+  const faltanCartas = n - tienes;
+  const sobresEstimados = Math.ceil(faltanCartas / porSobre);
+  document.getElementById('faltanSobres').textContent = "Te faltan " + faltanCartas + " cartas, aprox. " + sobresEstimados + " sobres para completar tu álbum";
   // Muestreo ponderado por ruleta
   const cum=[]; let acc=0;
   for(let p of probs){acc+=p; cum.push(acc);}
