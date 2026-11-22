@@ -49,7 +49,7 @@
   <label for="cartasQueTengo">¿Cuántas cartas diferentes ya tienes? (opcional):</label>
   <input type="number" id="cartasQueTengo" value="0" min="0">
   <label>¿Qué rareza te falta?</label>
-  <div style="font-size:13px;color:#666">Pon cuántas te faltan de cada rareza. Ej: si te faltan 2 de ♦♦♦, pon 2 ahí, güey.</div>
+  <div style="font-size:13px;color:#666">Pon cuántas te faltan de cada rareza. Ej: si te faltan 2 de ♦♦♦, pon 2 ahí.</div>
   <div id="faltantes"></div>
   <div id="avisoFaltantes" class="aviso"></div>
   <button onclick="simular()">CALCULAR</button>
@@ -92,7 +92,7 @@ function dibujarGrafico(datos){
   ctx.fillText(min+' sobres',5,c.height-5); ctx.fillText(max+' sobres',c.width-80,c.height-5);
 }
 
-// ===== EXP - ÓPTIMO =====
+// ===== EXP =====
 const EXP = {
   Isla:{c123:[["♦",32,61.48],["♦♦",28,30.83],["♦♦♦",4,7.07],["♦♦♦♦",4,0.62]],c4:[["♦♦",28,80.22],["♦♦♦",4,15.8],["♦♦♦♦",4,3.05],["★",11,0.76],["★★",6,0.15],["★★★",1,0.02]],c5:[["♦♦",28,46.15],["♦♦♦",4,28.85],["♦♦♦♦",4,14.36],["★",11,9.0],["★★",6,1.54],["★★★",1,0.10]]},
   Luz:{c123:[["♦",31,50.47],["♦♦",33,40.87],["♦♦♦",10,8.17],["♦♦♦♦",1,0.49]],c4:[["♦♦",33,80.45],["♦♦♦",10,12.40],["♦♦♦♦",1,6.62],["★",17,0.50],["★★",4,0.03]],c5:[["♦♦",33,46.05],["♦♦♦",10,23.70],["♦♦♦♦",1,17.46],["★",17,12.03],["★★",4,0.76]]},
@@ -111,13 +111,13 @@ const EXP = {
   Rocket:{c123:[["♦",32,100]],c4:[["♦♦",26,89.99],["♦♦♦",8,5],["♦♦♦♦",6,1.667],["★",6,2.572],["★★",15,0.5],["★★★",1,0.222],["👑",2,0.04]],c5:[["♦♦",26,59.998],["♦♦♦",8,20],["♦♦♦♦",6,6.667],["★",6,10.286],["★★",15,2],["★★★",1,0.889],["👑",2,0.16]]}
 };
 
-// Pre-calcula acumuladas una sola vez, güey. Así no suma en cada sorteo, güey.
+// Pre-calcula acumuladas una sola vez, güey. Así no suma en cada sorteo.
 for(const k in EXP){
   for(const slot of ['c123','c4','c5']){
     let acum=0;
     EXP[k][slot]=EXP[k][slot].map(([rare,count,total])=>{ acum+=total; return [rare,count,acum]; });
   }
-  // Pool ordenado: c123 + c4 + c5 sin duplicar. Así sabemos cuáles son las primeras n, güey.
+  // Pool ordenado: c123 + c4 + c5 sin duplicar. Así sabemos cuáles son las primeras n.
   const seen=new Set(), pool=[];
   for(const slot of ['c123','c4','c5']){
     for(const [rare,count] of EXP[k][slot]){
@@ -160,9 +160,9 @@ selExp.innerHTML=OPCIONES.map(([tipo,nombre,col,total])=>
   `<option value="${tipo}|${col}">${nombre} - "Colección Completa" (${col} cartas)</option><option value="${tipo}|${total}">${nombre} - Todas - 100% Completa (${total} cartas)</option>`
 ).join("");
 
-// ===== NUEVO: ¿QUÉ RAREZA TE FALTA? =====
-// Genera un input por cada rareza que existe en esa colección (n), güey.
-// Ej: Dominador 155 -> ♦, ♦♦, ♦♦♦, etc. con su max, güey.
+// ===== ¿QUÉ RAREZA TE FALTA? =====
+// Genera un input por cada rareza que existe en esa colección (n).
+// Ej: Dominador 155 -> ♦, ♦♦, ♦♦♦, etc. con su max.
 function generarInputsFaltantes(){
   const [tipo,nStr]=document.getElementById('expansion').value.split('|');
   const n=parseInt(nStr);
@@ -198,28 +198,26 @@ function simular(){
   const faltantesRarezas=leerFaltantes();
   const totalFaltantes=faltantesRarezas.length;
 
-  // Validación: tienes + faltan debe ser = n, güey.
-  // Tu caso: 153 + 2 de ♦♦♦ = 155, güey.
+  // Validación: tienes + faltan debe ser = n.
   if(cartasYa + totalFaltantes !== n){
     document.getElementById('avisoFaltantes').innerText=`Oye güey, no cuadra: tienes ${cartasYa} + te faltan ${totalFaltantes} = ${cartasYa+totalFaltantes}, pero la colección es de ${n}. Ajusta lo que te falta, güey.`;
     return;
   }
   if(totalFaltantes===0){
-    document.getElementById('faltanSobres').textContent='Ya la tienes completa, güey. 🎉';
-    document.getElementById('resultado').innerHTML='Ya tienes las '+n+' cartas, güey.';
+    document.getElementById('faltanSobres').textContent='Ya la tienes completa. 🎉';
+    document.getElementById('resultado').innerHTML='Ya tienes las '+n+' cartas.';
     return;
   }
   document.getElementById('avisoFaltantes').innerText='';
 
-  // CORREGIDO, GÜEY: el objetivo son las primeras n cartas del pool, no números, güey.
+  // El objetivo son las primeras n cartas del pool, no números.
   const objetivo=new Set(EXP[tipo].pool.slice(0,n));
   const poolN=EXP[tipo].pool.slice(0,n);
 
   const resultados=[], listaRepetidas=[];
   for(let s=0;s<sims;s++){
-    // CORREGIDO, GÜEY: ya no asumimos que te faltan las últimas.
-    // Elegimos al azar QUÉ cartas específicas te faltan dentro de esa rareza, güey.
-    // Ej: si te faltan 2 de ♦♦♦, elegimos 2 random de las 8 de ♦♦♦, güey. No las últimas, güey.
+    // Elegimos al azar QUÉ cartas específicas te faltan dentro de esa rareza.
+    // Ej: si te faltan 2 de ♦♦♦, elegimos 2 random de las 8 de ♦♦♦, güey. No las últimas.
     const porRareza={};
     poolN.forEach(id=>{ const r=id.split('-')[0]; if(!porRareza[r]) porRareza[r]=[]; porRareza[r].push(id); });
     const faltantesSet=new Set();
@@ -237,7 +235,7 @@ function simular(){
     while(tengo.size<n){
       const sobre=abrirSobrePorTipo(tipo);
       for(const c of sobre){
-        if(!objetivo.has(c)) continue; // carta que no cuenta para esta colección, güey.
+        if(!objetivo.has(c)) continue; // carta que no cuenta para esta colección.
         if(tengo.has(c)) repetidas++;
         else tengo.add(c);
       }
@@ -252,6 +250,10 @@ function simular(){
   const medn=mediana(resultados), p90=percentil(resultados,90), max=Math.max(...resultados);
   const promRepetidas=listaRepetidas.reduce((a,b)=>a+b,0)/listaRepetidas.length;
   const bench=benchmarkUniforme(n);
+  const RELOJES_POR_SOBRE = 12;
+  const relojesMedia = Math.round(med) * RELOJES_POR_SOBRE;
+  const relojesMediana = Math.round(medn) * RELOJES_POR_SOBRE;
+  const relojesP90 = Math.round(p90) * RELOJES_POR_SOBRE;
 
   document.getElementById('media').textContent=Math.round(med);
   document.getElementById('mediana').textContent=Math.round(medn);
@@ -261,10 +263,14 @@ function simular(){
   document.getElementById('benchmark').textContent=Math.round(bench)+' sobres';
   document.getElementById('faltanSobres').textContent='Te faltan en promedio '+Math.round(med)+' sobres más para completar tu colección.';
   document.getElementById('resultado').innerHTML=
-    '<b>Resultado:</b> Te faltan <b>'+totalFaltantes+' carta(s): '+faltantesRarezas.join(', ')+'</b>. En promedio necesitas <b>'+Math.round(med)+' sobres más</b> para tener las '+n+' cartas. '+
+    '<b>Resultado:</b> Te faltan <b>'+totalFaltantes+' carta(s): '+faltantesRarezas.join(', ')+'</b>. En pro...'+
     'La mitad de la gente lo logra con <b>'+Math.round(medn)+' sobres o menos</b>. '+
     'Y 9 de cada 10 personas lo logran con <b>'+Math.round(p90)+' sobres o menos</b>.<br><br>'+
-    '<b>Repetidas:</b> Cuando por fin completas la colección, en promedio te van a sobrar <b>'+Math.round(promRepetidas)+' cartas repetidas</b>. O sea, cartas que ya tenías.<br><br>'+
+    '<b>Repetidas:</b> Cuando por fin completas la colección, en promedio te van a sobrar <b>'+Math.round(promRepetidas)+
+    '<br><br><b>⏳ Relojes necesarios (12 por sobre):</b> '+
+    'Media: <b>'+relojesMedia.toLocaleString()+' relojes</b>. '+
+    'Mediana: <b>'+relojesMediana.toLocaleString()+'</b>. '+
+    'P90: <b>'+relojesP90.toLocaleString()+'</b>.<br>'+
     '<b>¿Por qué tantos sobres?</b> Si Todas las cartas salieran con la misma suerte, solo necesitarías <b>'+Math.round(bench)+' sobres</b>. '+
     'Pero como las raras salen menos, en realidad necesitas <b>'+Math.round(med)+' sobres</b>, o sea <b>'+Math.round(med-bench)+' sobres más</b> por culpa de las raras.';
   dibujarGrafico(resultados);
