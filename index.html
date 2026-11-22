@@ -268,7 +268,7 @@ function dibujarGrafico(datos) {
     conteo[i]++;
   });
   const maxC = Math.max(...conteo);
-  ctx.fillStyle = '#2A75BB;
+  ctx.fillStyle = '#2A75BB';
   conteo.forEach((v, i) => {
     const h = (v / maxC) * (c.height - 40);
     ctx.fillRect(i * (c.width / bins) + 2, c.height - 20 - h, (c.width / bins) - 4, h);
