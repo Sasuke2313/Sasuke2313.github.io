@@ -190,7 +190,7 @@
     <option value="103">Crisis Dimensional - Todas - 100% Completa (103 cartas)</option>
     <option value="69">Arboleda de Eevee - "Colección Completa" (69 cartas)</option>
     <option value="103">Arboleda de Eevee - Todas - 100% Completa (103 cartas)</option>
-    <option value="71">Manantial Oculto - Todas - 100% Completa (103 cartas)</option>
+    <option value="71">Manantial Oculto - "Coleccion Completa" (71 cartas)</option>
     <option value="105">Manantial Oculto  - Todas - 100% Completa (103 cartas)</option>
   </select>
 
@@ -567,11 +567,14 @@ function simular() {
     'Te faltan en promedio ' + Math.round(med) + ' sobres para completar tu colección.';
 
   document.getElementById('resultado').innerHTML =
-    '<b>Resultado:</b> En promedio necesitas <b>' + Math.round(med) + ' sobres</b> para tener las ' + n + ' cartas. ' +
-    'La mediana es ' + Math.round(medn) + ' sobres y el 90% lo logra con ' + Math.round(p90) + ' sobres o menos.<br>' +
-    '<b>Repetidas:</b> En promedio te van a sobrar <b>' + Math.round(promRepetidas) + ' cartas repetidas</b> cuando completes la colección.<br>' +
-    '<b>Benchmark uniforme:</b> Si todas las cartas salieran con la misma probabilidad, necesitarías solo <b>' + Math.round(bench) + ' sobres</b>. ' +
-    'Como las raras salen menos, en realidad necesitas ' + Math.round(med) + ' sobres, o sea ' + Math.round(med - bench) + ' sobres más que el caso ideal.';
+  '<b>¿Qué significa esta gráfica?</b> Hicimos 1,000 veces el experimento de abrir sobres hasta completar la colección. ' +
+  'Cada barrita es un grupo de personas con la misma suerte. La barrita más alta es la suerte que más se repite.<br><br>' +
+  '<b>Resultado:</b> En promedio necesitas <b>' + Math.round(med) + ' sobres</b> para tener las ' + n + ' cartas. ' +
+  'La mitad de la gente lo logra con <b>' + Math.round(medn) + ' sobres o menos</b>. ' +
+  'Y 9 de cada 10 personas lo logran con <b>' + Math.round(p90) + ' sobres o menos</b>.<br><br>' +
+  '<b>Repetidas:</b> Cuando por fin completas la colección, en promedio te van a sobrar <b>' + Math.round(promRepetidas) + ' cartas repetidas</b>. O sea, cartas que ya tenías.<br><br>' +
+  '<b>¿Por qué tantos sobres?</b> Si todas las cartas salieran con la misma suerte, solo necesitarías <b>' + Math.round(bench) + ' sobres</b>. ' +
+  'Pero como las raras salen menos, en realidad necesitas <b>' + Math.round(med) + ' sobres</b>, o sea <b>' + Math.round(med - bench) + ' sobres más</b> por culpa de las raras.';
 
   dibujarGrafico(resultados);
 }
