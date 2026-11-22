@@ -188,11 +188,11 @@
     <option value="72">Festival Brillante - "Colección Completa" (72 cartas)</option>
     <option value="111">Festival Brillante - Todas - 100% Completa (111 cartas)</option>
     <option value="69">Crisis Dimensional - "Colección Completa" (69 cartas)</option>
-    <option value="103">Crisis Dimensional - Todas - 100% Completa (103 cartas)</option>
+    <option value="Crisis-103">Crisis Dimensional - Todas - 100% Completa (103 cartas)</option>
     <option value="69">Arboleda de Eevee - "Colección Completa" (69 cartas)</option>
-    <option value="103">Arboleda de Eevee - Todas - 100% Completa (103 cartas)</option>
+    <option value="Eevee-103">Arboleda de Eevee - Todas - 100% Completa (103 cartas)</option>
     <option value="71">Manantial Oculto - "Coleccion Completa" (71 cartas)</option>
-    <option value="105">Manantial Oculto  - Todas - 100% Completa (103 cartas)</option>
+    <option value="Manantial-105">Manantial Oculto  - Todas - 100% Compa (105 cartas)</option>
   </select>
 
   <label for="simulaciones">Número de simulaciones (ej. 1000):</label>
@@ -356,7 +356,7 @@ function abrirSobreLuz() {
   ];
 }
 
-// --- FESTIVAL BRILLANTE - 111 cartas, 10 rarezas ---
+// --- FESTIVAL BRILLANTE - 111 cartas ---
 function drawCarta123_Festival() {
   return Math.floor(Math.random() * 32);
 }
@@ -504,7 +504,7 @@ function drawCarta5_Manantial() {
 function abrirSobreSegunN(n,tipo) {
   if (tipo === 'Crisis') return abrirSobreCrisis();
   if (tipo === 'Eevee') return abrirSobreEevee();
-  if (tipo === 'Manantial') return abrirSobreEevee();
+  if (tipo === 'Manantial') return abrirSobreManantial();
   if (n === 68 || n === 86) return abrirSobreIsla();
   if (n === 75 || n === 96) return abrirSobreLuz();
   if (n === 72 || n === 111) return abrirSobreFestival();
