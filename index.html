@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulador MonteCarlo Pokemon TCGP - Christian Lagunes</title>
+<title>Simulador Montecarlo Pokemon TCGP - Christian Lagunes</title>
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -36,13 +36,14 @@
   h1 {
     text-align: center;
     color: #000000;
-    margin: 5px 0 5px;
+    margin: 5px 0 2px;
   }
   .subtitle {
     text-align: center;
     color: #666;
-    margin-bottom: 20px;
+    margin-top: 14px;
     font-size: 14px;
+    line-height: 1.5;
   }
   label {
     font-weight: bold;
@@ -143,7 +144,7 @@
   }
   #graficaTitulo h3 { margin: 0; color: #2D6A4F; }
   #graficaTitulo p {
-    color: #555;
+    color: #1BA8E0;
     font-size: 14px;
     margin: 6px 0 0;
     line-height: 1.5;
@@ -175,8 +176,8 @@
 </div>
 
 <div class="card">
-  <h1>Simulador Monte Carlo - TCG Pocket</h1>
-  <div class="subtitle">¿Cuántos sobres necesitas para completar tu colección?</div>
+  <h1>Simulador MonteCarlo - Pokemon TCG Pocket</h1>
+  <div class="subtitle">¿Cuántos sobres necesitas para completar una expansion?</div>
 
   <label for="expansion">Elige tu expansión:</label>
   <select id="expansion">
@@ -227,12 +228,8 @@
 
   <div id="graficaTitulo">
     <h3>¿Cuántos sobres necesitas en realidad?</h3>
-    <p>
-      Esta gráfica muestra cuántas simulaciones necesitaron X sobres para completar la colección.
-      La barra más alta es lo más común que te va a pasar.
-      Si la gráfica está muy a la derecha, significa que esa expansión es más difícil de completar.
-      <br><b>Repetidas:</b> cada vez que te sale una carta que ya tienes, cuenta como repetida. Al final, en promedio te sobran tantas repetidas.
-    </p>
+      <p>Hicimos 1,000  o 10,000 veces el experimento de abrir sobres hasta completar la colección. 
+      Cada barrita es un grupo de personas con la misma suerte. La barrita más alta es la suerte que más se repite.</p>
   </div>
   <canvas id="grafico" width="800" height="300"></canvas>
 
@@ -567,8 +564,6 @@ function simular() {
     'Te faltan en promedio ' + Math.round(med) + ' sobres para completar tu colección.';
 
   document.getElementById('resultado').innerHTML =
-  '<b>¿Qué significa esta gráfica?</b> Hicimos 1,000 veces el experimento de abrir sobres hasta completar la colección. ' +
-  'Cada barrita es un grupo de personas con la misma suerte. La barrita más alta es la suerte que más se repite.<br><br>' +
   '<b>Resultado:</b> En promedio necesitas <b>' + Math.round(med) + ' sobres</b> para tener las ' + n + ' cartas. ' +
   'La mitad de la gente lo logra con <b>' + Math.round(medn) + ' sobres o menos</b>. ' +
   'Y 9 de cada 10 personas lo logran con <b>' + Math.round(p90) + ' sobres o menos</b>.<br><br>' +
