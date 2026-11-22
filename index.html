@@ -30,6 +30,10 @@
   #graficaTitulo p{color:#333!important;font-size:14px;margin:6px 0 0;line-height:1.5}
   canvas{width:100%;max-height:300px;margin-top:10px;border:1px solid #eee;border-radius:8px}
   .author{text-align:center;margin-top:15px;font-size:12px;color:#888}
+  .fal{display:flex;align-items:center;gap:10px;background:#f7f7f7;padding:8px 10px;border-radius:8px;margin-top:6px}
+  .fal span{flex:1;font-size:14px;color:#333}
+  .fal input{width:80px!important;text-align:center;margin:0!important}
+  .aviso{margin-top:8px;color:#b45309;font-size:13px;font-weight:bold}
   @media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}.stats2{grid-template-columns:1fr}}
 </style>
 </head>
@@ -42,10 +46,12 @@
   <select id="expansion"></select>
   <label for="simulaciones">Número de simulaciones (ej. 1000):</label>
   <input type="number" id="simulaciones" value="1000" min="10" max="10000">
-  <label for="sobresIniciales">¿Cuántos sobres ya abriste? (opcional, deja 0 si vas desde cero):</label>
-  <input type="number" id="sobresIniciales" value="0" min="0">
   <label for="cartasQueTengo">¿Cuántas cartas diferentes ya tienes? (opcional):</label>
   <input type="number" id="cartasQueTengo" value="0" min="0">
+  <label>¿Qué rareza te falta?</label>
+  <div style="font-size:13px;color:#666">Pon cuántas te faltan de cada rareza. Ej: si te faltan 2 de ♦♦♦, pon 2 ahí, güey.</div>
+  <div id="faltantes"></div>
+  <div id="avisoFaltantes" class="aviso"></div>
   <button onclick="simular()">CALCULAR</button>
   <div id="faltanSobres">Aquí te voy a decir cuántos sobres te faltan para completar tu colección.</div>
   <div class="stats">
@@ -154,21 +160,80 @@ selExp.innerHTML=OPCIONES.map(([tipo,nombre,col,total])=>
   `<option value="${tipo}|${col}">${nombre} - "Colección Completa" (${col} cartas)</option><option value="${tipo}|${total}">${nombre} - Todas - 100% Completa (${total} cartas)</option>`
 ).join("");
 
+// ===== NUEVO: ¿QUÉ RAREZA TE FALTA? =====
+// Genera un input por cada rareza que existe en esa colección (n), güey.
+// Ej: Dominador 155 -> ♦, ♦♦, ♦♦♦, etc. con su max, güey.
+function generarInputsFaltantes(){
+  const [tipo,nStr]=document.getElementById('expansion').value.split('|');
+  const n=parseInt(nStr);
+  const poolN=EXP[tipo].pool.slice(0,n);
+  const conteo={};
+  poolN.forEach(id=>{ const r=id.split('-')[0]; conteo[r]=(conteo[r]||0)+1; });
+  const orden=["♦","♦♦","♦♦♦","♦♦♦♦","★","★★","★★★","✨","✨✨","👑"];
+  const div=document.getElementById('faltantes');
+  div.innerHTML='';
+  orden.forEach(r=>{
+    if(!conteo[r]) return;
+    div.innerHTML+=`<div class="fal"><span>${r} (hay ${conteo[r]} en esta colección)</span><input type="number" min="0" max="${conteo[r]}" value="0" data-rareza="${r}"></div>`;
+  });
+  document.getElementById('avisoFaltantes').innerText='';
+}
+function leerFaltantes(){
+  let arr=[];
+  document.querySelectorAll('#faltantes input').forEach(inp=>{
+    const num=parseInt(inp.value)||0;
+    const r=inp.dataset.rareza;
+    for(let i=0;i<num;i++) arr.push(r);
+  });
+  return arr;
+}
+selExp.addEventListener('change', generarInputsFaltantes);
+generarInputsFaltantes();
+
 function simular(){
   const [tipo,nStr]=document.getElementById('expansion').value.split('|');
   const n=parseInt(nStr);
   const sims=parseInt(document.getElementById('simulaciones').value)||1000;
-  const sobresYa=parseInt(document.getElementById('sobresIniciales').value)||0;
   const cartasYa=parseInt(document.getElementById('cartasQueTengo').value)||0;
+  const faltantesRarezas=leerFaltantes();
+  const totalFaltantes=faltantesRarezas.length;
+
+  // Validación: tienes + faltan debe ser = n, güey.
+  // Tu caso: 153 + 2 de ♦♦♦ = 155, güey.
+  if(cartasYa + totalFaltantes !== n){
+    document.getElementById('avisoFaltantes').innerText=`Oye güey, no cuadra: tienes ${cartasYa} + te faltan ${totalFaltantes} = ${cartasYa+totalFaltantes}, pero la colección es de ${n}. Ajusta lo que te falta, güey.`;
+    return;
+  }
+  if(totalFaltantes===0){
+    document.getElementById('faltanSobres').textContent='Ya la tienes completa, güey. 🎉';
+    document.getElementById('resultado').innerHTML='Ya tienes las '+n+' cartas, güey.';
+    return;
+  }
+  document.getElementById('avisoFaltantes').innerText='';
 
   // CORREGIDO, GÜEY: el objetivo son las primeras n cartas del pool, no números, güey.
   const objetivo=new Set(EXP[tipo].pool.slice(0,n));
-  const base=EXP[tipo].pool.slice(0,Math.min(cartasYa,n));
+  const poolN=EXP[tipo].pool.slice(0,n);
 
   const resultados=[], listaRepetidas=[];
   for(let s=0;s<sims;s++){
+    // CORREGIDO, GÜEY: ya no asumimos que te faltan las últimas.
+    // Elegimos al azar QUÉ cartas específicas te faltan dentro de esa rareza, güey.
+    // Ej: si te faltan 2 de ♦♦♦, elegimos 2 random de las 8 de ♦♦♦, güey. No las últimas, güey.
+    const porRareza={};
+    poolN.forEach(id=>{ const r=id.split('-')[0]; if(!porRareza[r]) porRareza[r]=[]; porRareza[r].push(id); });
+    const faltantesSet=new Set();
+    faltantesRarezas.forEach(r=>{
+      const opciones=(porRareza[r]||[]).filter(c=>!faltantesSet.has(c));
+      if(opciones.length){
+        const elegida=opciones[Math.floor(Math.random()*opciones.length)];
+        faltantesSet.add(elegida);
+      }
+    });
+    const base=poolN.filter(c=>!faltantesSet.has(c));
+
     const tengo=new Set(base);
-    let sobres=sobresYa, repetidas=0;
+    let sobres=0, repetidas=0;
     while(tengo.size<n){
       const sobre=abrirSobrePorTipo(tipo);
       for(const c of sobre){
@@ -194,9 +259,9 @@ function simular(){
   document.getElementById('maximo').textContent=max;
   document.getElementById('repetidas').textContent=Math.round(promRepetidas)+' repetidas';
   document.getElementById('benchmark').textContent=Math.round(bench)+' sobres';
-  document.getElementById('faltanSobres').textContent='Te faltan en promedio '+Math.round(med)+' sobres para completar tu colección.';
+  document.getElementById('faltanSobres').textContent='Te faltan en promedio '+Math.round(med)+' sobres más para completar tu colección.';
   document.getElementById('resultado').innerHTML=
-    '<b>Resultado:</b> En promedio necesitas <b>'+Math.round(med)+' sobres</b> para tener las '+n+' cartas. '+
+    '<b>Resultado:</b> Te faltan <b>'+totalFaltantes+' carta(s): '+faltantesRarezas.join(', ')+'</b>. En promedio necesitas <b>'+Math.round(med)+' sobres más</b> para tener las '+n+' cartas. '+
     'La mitad de la gente lo logra con <b>'+Math.round(medn)+' sobres o menos</b>. '+
     'Y 9 de cada 10 personas lo logran con <b>'+Math.round(p90)+' sobres o menos</b>.<br><br>'+
     '<b>Repetidas:</b> Cuando por fin completas la colección, en promedio te van a sobrar <b>'+Math.round(promRepetidas)+' cartas repetidas</b>. O sea, cartas que ya tenías.<br><br>'+
