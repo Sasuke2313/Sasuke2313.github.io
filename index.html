@@ -186,6 +186,10 @@
     <option value="96">Luz Triunfal - Todas - 100% Completa (96 cartas)</option>
     <option value="72">Festival Brillante - "Colección Completa" (72 cartas)</option>
     <option value="111">Festival Brillante - Todas - 100% Completa (111 cartas)</option>
+    <option value="69">Crisis Dimensional - "Colección Completa" (69 cartas)</option>
+    <option value="103">Crisis Dimensional - Todas - 100% Completa (103 cartas)</option>
+    <option value="69">Arboleda de Eevee - "Colección Completa" (69 cartas)</option>
+    <option value="103">Arboleda de Eevee - Todas - 100% Completa (103 cartas)</option>
   </select>
 
   <label for="simulaciones">Número de simulaciones (ej. 1000):</label>
@@ -390,8 +394,85 @@ function abrirSobreFestival() {
     drawCarta5_Festival()
   ];
 }
+// --- CRISIS DIMENSIONAL - 103 cartas ---
+function drawCarta123_Crisis() {
+  return Math.floor(Math.random() * 32);
+}
+function drawCarta4_Crisis() {
+  const r = Math.random() * 100;
+  if (r < 88.99) return 32 + Math.floor(Math.random() * 24);
+  if (r < 93.942) return 56 + Math.floor(Math.random() * 8);
+  if (r < 95.607) return 64 + Math.floor(Math.random() * 5);
+  if (r < 98.175) return 69 + Math.floor(Math.random() * 6);
+  if (r < 98.667) return 75 + Math.floor(Math.random() * 12);
+  if (r < 98.889) return 87;
+  if (r < 99.599) return 88 + Math.floor(Math.random() * 10);
+  if (r < 99.931) return 98 + Math.floor(Math.random() * 4);
+  return 102;
+}
+function drawCarta5_Crisis() {
+  const r = Math.random() * 100;
+  if (r < 56.0) return 32 + Math.floor(Math.random() * 24);
+  if (r < 75.808) return 56 + Math.floor(Math.random() * 8);
+  if (r < 82.468) return 64 + Math.floor(Math.random() * 5);
+  if (r < 92.752) return 69 + Math.floor(Math.random() * 6);
+  if (r < 94.744) return 75 + Math.floor(Math.random() * 12);
+  if (r < 95.632) return 87;
+  if (r < 98.482) return 88 + Math.floor(Math.random() * 10);
+  if (r < 99.814) return 98 + Math.floor(Math.random() * 4);
+  return 102;
+}
+function abrirSobreCrisis() {
+  return [
+    drawCarta123_Crisis(),
+    drawCarta123_Crisis(),
+    drawCarta123_Crisis(),
+    drawCarta4_Crisis(),
+    drawCarta5_Crisis()
+  ];
+}
 
-function abrirSobreSegunN(n) {
+// --- ARBOLEDA DE EEVEE - 107 cartas ---
+function drawCarta123_Eevee() {
+  return Math.floor(Math.random() * 32);
+}
+function drawCarta4_Eevee() {
+  const r = Math.random() * 100;
+  if (r < 88.99) return 32 + Math.floor(Math.random() * 23);
+  if (r < 93.942) return 55 + Math.floor(Math.random() * 8);
+  if (r < 95.604) return 63 + Math.floor(Math.random() * 6);
+  if (r < 98.169) return 69 + Math.floor(Math.random() * 9);
+  if (r < 98.663) return 78 + Math.floor(Math.random() * 13);
+  if (r < 98.885) return 91;
+  if (r < 99.595) return 92 + Math.floor(Math.random() * 10);
+  if (r < 99.927) return 102 + Math.floor(Math.random() * 4);
+  return 106;
+}
+function drawCarta5_Eevee() {
+  const r = Math.random() * 100;
+  if (r < 56.0) return 32 + Math.floor(Math.random() * 23);
+  if (r < 75.808) return 55 + Math.floor(Math.random() * 8);
+  if (r < 82.468) return 63 + Math.floor(Math.random() * 6);
+  if (r < 92.755) return 69 + Math.floor(Math.random() * 9);
+  if (r < 94.744) return 78 + Math.floor(Math.random() * 13);
+  if (r < 95.632) return 91;
+  if (r < 98.482) return 92 + Math.floor(Math.random() * 10);
+  if (r < 99.814) return 102 + Math.floor(Math.random() * 4);
+  return 106;
+}
+function abrirSobreEevee() {
+  return [
+    drawCarta123_Eevee(),
+    drawCarta123_Eevee(),
+    drawCarta123_Eevee(),
+    drawCarta4_Eevee(),
+    drawCarta5_Eevee()
+  ];
+}
+
+function abrirSobreSegunN(n,tipo) {
+  if (tipo === 'crisis') return abrirSobreCrisis();
+  if (tipo === 'eevee') return abrirSobreEevee();
   if (n === 68 || n === 86) return abrirSobreIsla();
   if (n === 75 || n === 96) return abrirSobreLuz();
   if (n === 72 || n === 111) return abrirSobreFestival();
@@ -399,7 +480,9 @@ function abrirSobreSegunN(n) {
 }
 
 function simular() {
-  const n = parseInt(document.getElementById('expansion').value);
+  const sel = document.getElementById('expansion').value;
+  const n = parseInt(sel.split('-')[1] || sel);
+  const tipo = sel.includes('-') ? sel.split('-')[0] : '';
   const sims = parseInt(document.getElementById('simulaciones').value) || 1000;
   const sobresYa = parseInt(document.getElementById('sobresIniciales').value) || 0;
   const cartasYa = parseInt(document.getElementById('cartasQueTengo').value) || 0;
@@ -414,7 +497,7 @@ function simular() {
     let repetidas = 0;
 
     while (tengo.size < n) {
-      const sobre = abrirSobreSegunN(n);
+      const sobre = abrirSobreSegunN(n,tipo);
       sobre.forEach(c => {
         if (c < n) {
           if (tengo.has(c)) {
