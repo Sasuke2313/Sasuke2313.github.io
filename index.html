@@ -197,38 +197,24 @@ function simular(){
   const cartasYa=parseInt(document.getElementById('cartasQueTengo').value)||0;
   let faltantesRarezas = leerFaltantes();
   let totalFaltantes = faltantesRarezas.length;
-// Caso primera vez: tienes 0 y no pusiste nada en faltantes
-// Lo llenamos en automático con la colección completa
+// Caso primera vez: tienes 0 y no pusiste nada
 if(cartasYa === 0 && totalFaltantes === 0){
-  const inputs = document.querySelectorAll('input[id^="falta-"]');
+  const poolCompleto = EXP[tipo].pool.slice(0, n);
 
-  inputs.forEach(inp => {
-    let maximo = inp.max || inp.dataset.total || inp.getAttribute('data-max') || inp.placeholder;
-
-    // Si no tiene max, lo sacamos del texto de al lado: "♦ (32)" -> 32
-    if(!maximo && inp.parentElement){
-      let texto = inp.parentElement.textContent;
-      let m = texto.match(/\((\d+)\)/) || texto.match(/\/\s*(\d+)/) || texto.match(/de\s+(\d+)/);
-      if(m) maximo = m[1];
-    }
-
-    if(maximo){
-      inp.value = maximo;
-    }
-  });
-
-  // Volvemos a leer ya con los valores llenos
-  faltantesRarezas = leerFaltantes();
+  // El pool guarda "rareza-numero", ej "♦-0". Sacamos solo la rareza
+  faltantesRarezas = poolCompleto.map(id => id.substring(0, id.lastIndexOf('-')));
   totalFaltantes = faltantesRarezas.length;
 
-  document.getElementById('avisoFaltantes').innerText = 'Empezando de cero, calculamos con la colección completa: ' + n + ' cartas.';
-}
+  // Llenamos los cuadritos para que el usuario vea 32, 28, 4, 4
+  const conteo = {};
+  for(let r of faltantesRarezas) conteo[r] = (conteo[r] || 0) + 1;
+  for(let r in conteo){
+    const inp = document.getElementById('falta-' + r);
+    if(inp) inp.value = conteo[r];
+  }
 
-  // Volvemos a leer ya con los valores llenos
-  faltantesRarezas = leerFaltantes();
-  totalFaltantes = faltantesRarezas.length;
-
-  document.getElementById('avisoFaltantes').innerText = 'Empezando de cero, calculamos con la colección completa: ' + n + ' cartas.';
+  const avisoEl = document.getElementById('avisoFaltantes');
+  if(avisoEl) avisoEl.innerText = 'Empezando de cero, calculamos con la colección completa: ' + n + ' cartas.';
 }
   // Validación: tienes + faltan debe ser = n.
   if(cartasYa + totalFaltantes !== n){
