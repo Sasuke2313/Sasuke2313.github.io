@@ -180,38 +180,7 @@
   <div class="subtitle">¿Cuántos sobres necesitas para completar una expansion?</div>
 
   <label for="expansion">Elige tu expansión:</label>
-  <select id="expansion">
-    <option value="68">Isla Singular - "Colección Completa" (68 cartas)</option>
-    <option value="86">Isla Singular - Todas - 100% Completa (86 cartas)</option>
-    <option value="75">Luz Triunfal - "Colección Completa" (75 cartas)</option>
-    <option value="96">Luz Triunfal - Todas - 100% Completa (96 cartas)</option>
-    <option value="72">Festival Brillante - "Colección Completa" (72 cartas)</option>
-    <option value="111">Festival Brillante - Todas - 100% Completa (111 cartas)</option>
-    <option value="69">Crisis Dimensional - "Colección Completa" (69 cartas)</option>
-    <option value="Crisis-103">Crisis Dimensional - Todas - 100% Completa (103 cartas)</option>
-    <option value="69">Arboleda de Eevee - "Colección Completa" (69 cartas)</option>
-    <option value="Eevee-103">Arboleda de Eevee - Todas - 100% Completa (103 cartas)</option>
-    <option value="71">Manantial Oculto - "Coleccion Completa" (71 cartas)</option>
-    <option value="Manantial-105">Manantial Oculto  - Todas - 100% Compa (105 cartas)</option>
-    <option value="Fuego-69">Fuego Carmesí - "Colección Completa" (69)</option>
-    <option value="Fuego-89">Fuego Carmesí - Todas - 100% completa (89)</option>
-    <option value="Desfile-155">Desfile de Ensueño - "Colección Completa" (155)</option>
-    <option value="Desfile-206">Desfile de Ensueño - Todas - 100% completa (206)</option>
-    <option value="Encantos-93">Encantos de Paldea - "Colección Completa" (93)</option>
-    <option value="Encantos-117">Encantos de Paldea - Todas -  100% completa (117)</option>
-    <option value="Megavariocolor-69">Megavariocolor - "Colección Completa" (69)</option>
-    <option value="Megavariocolor-87">Megavariocolor - Todas 100% completa (87)</option>
-    <option value="Aura-155">Aura Pulsante - "Colección Completa" (155)</option>
-    <option value="Aura-206">Aura Pulsante - Todas- 100% completa (206)</option>
-    <option value="Impulso-74">Impulso Paradojico -  "Colección Completa" (74)</option>
-    <option value="Impulso-95">Impulso Paradojico - Todas- 100% completa (95)</option>
-    <option value="Maravillas-69">Maravillas Cotidianas - "Colección Completa" (69)</option>
-    <option value="Maravillas-92">Maravillas Cotidianas - Todas - 100% completa (92)</option>
-    <option value="Dominador-155">Dominador de los Cielos - "Colección Completa" (155)</option>
-    <option value="Dominador-205">Dominador de los Cielos - Todas - 100% completa (205)</option>
-    <option value="Ambicion-72">La Ambición del Equipo Rocket - "Colección Completa" (72)</option>
-    <option value="Ambicion-96 ">La Ambición del Equipo Rocket - Todas -  100% completa (96)</option>
-  </select>
+  <select id="expansion"></select>
 
   <label for="simulaciones">Número de simulaciones (ej. 1000):</label>
   <input type="number" id="simulaciones" value="1000" min="10" max="10000">
@@ -408,13 +377,36 @@ function abrirSobreSegunN(n,tipo) {
   return abrirSobrePorTipo('Isla');
 }
   
-  
+// ===== OPCIONES =====
+const OPCIONES = [
+  ["Isla", "Isla Singular", 68, 86],
+  ["Luz", "Luz Triunfal", 75, 96],
+  ["Festival", "Festival Brillante", 72, 111],
+  ["Crisis", "Crisis Dimensional", 69, 103],
+  ["Eevee", "Arboleda de Eevee", 69, 107],
+  ["Manantial", "Manantial Oculto", 71, 105],
+  ["Fuego", "Fuego Carmesí", 69, 89],
+  ["Desfile", "Desfile de Ensueño", 155, 206],
+  ["Encantos", "Encantos de Paldea", 93, 117],
+  ["Megavariocolor", "Megavariocolor", 69, 87],
+  ["Aura", "Aura Pulsante", 155, 206],
+  ["Impulso", "Impulso Paradojico", 74, 95],
+  ["Maravillas", "Maravillas Cotidianas", 69, 92],
+  ["Dominador", "Dominador de los Cielos", 155, 205],
+  ["Rocket", "La Ambición del Equipo Rocket", 72, 96],
+];
+
+const selExp = document.getElementById("expansion");
+OPCIONES.forEach(([tipo, nombre, col, total]) => {
+  selExp.innerHTML += `<option value="${tipo}|${col}">${nombre} - "Colección Completa" (${col} cartas)</option>`;
+  selExp.innerHTML += `<option value="${tipo}|${total}">${nombre} - Todas - 100% Completa (${total} cartas)</option>`;
+});  
 
     
 function simular() {
   const sel = document.getElementById('expansion').value;
-  const n = parseInt(sel.split('-')[1] || sel);
-  const tipo = sel.includes('-') ? sel.split('-')[0] : '';
+  const [tipo, nStr] = sel.split('|');
+  const n = parseInt(nStr);
   const sims = parseInt(document.getElementById('simulaciones').value) || 1000;
   const sobresYa = parseInt(document.getElementById('sobresIniciales').value) || 0;
   const cartasYa = parseInt(document.getElementById('cartasQueTengo').value) || 0;
