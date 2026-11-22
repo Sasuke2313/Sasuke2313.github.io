@@ -267,7 +267,7 @@ if(cartasYa === 0 && totalFaltantes === 0){
   const med=resultados.reduce((a,b)=>a+b,0)/resultados.length;
   const medn=mediana(resultados), p90=percentil(resultados,90), max=Math.max(...resultados);
   const promRepetidas=listaRepetidas.reduce((a,b)=>a+b,0)/listaRepetidas.length;
-  const bench=benchmarkUniforme(n);
+  const bench=benchmarkUniforme(totalFaltantes);
   const RELOJES_POR_SOBRE = 12;
   const relojesMedia = Math.round(med) * RELOJES_POR_SOBRE;
   const relojesMediana = Math.round(medn) * RELOJES_POR_SOBRE;
@@ -280,16 +280,21 @@ if(cartasYa === 0 && totalFaltantes === 0){
   document.getElementById('repetidas').textContent=Math.round(promRepetidas)+' repetidas';
   document.getElementById('benchmark').textContent=Math.round(bench)+' sobres';
   document.getElementById('faltanSobres').textContent='Te faltan en promedio '+Math.round(med)+' sobres más para completar tu colección.';
-  document.getElementById('resultado').innerHTML=
-    '<b>Resultado:</b> Te faltan <b>'+totalFaltantes+' carta(s): '+faltantesRarezas.join(', ')+'</b>. En pro...'+
-    'La mitad de la gente lo logra con <b>'+Math.round(medn)+' sobres o menos</b>. '+
-    'Y 9 de cada 10 personas lo logran con <b>'+Math.round(p90)+' sobres o menos</b>.<br><br>'+
-    '<b>Repetidas:</b> Cuando por fin completas la colección, en promedio te van a sobrar <b>'+Math.round(promRepetidas)+
-    '<br><br><b>⏳ Relojes necesarios (12 por sobre):</b> '+
-    'Media: <b>'+relojesMedia.toLocaleString()+' relojes</b>. '+
-    'Mediana: <b>'+relojesMediana.toLocaleString()+'</b>. '+
-    'P90: <b>'+relojesP90.toLocaleString()+'</b>.<br>'+
-    '<b>¿Por qué tantos sobres?</b> Si Todas las cartas salieran con la misma suerte, solo necesitarías <b>'+Math.round(bench)+' sobres</b>. '+
+  const dif = Math.round(med) - Math.round(bench);
+  const textoDif = dif >= 0
+    ? 'o sea ' + dif + ' sobres más por culpa de las raras.'
+    : 'o sea que te ahorras ' + Math.abs(dif) + ' sobres porque solo te faltan las raras.';
+  document.getElementById('resultado').innerHTML =
+  '<div style="margin-bottom:12px"><b>Resultado:</b> Te faltan <b>' + totalFaltantes + ' carta(s): ' + faltantesRarezas.join(', ') + '</b>.</div>' +
+  '<div style="margin-bottom:12px">En promedio necesitas <b>' + Math.round(med) + ' sobres más</b>.<br>' +
+  'La mitad de la gente lo logra con <b>' + Math.round(medn) + ' sobres o menos</b>.<br>' +
+  'Y 9 de cada 10 lo logran con <b>' + Math.round(p90) + ' sobres o menos</b>.</div>' +
+  '<div style="margin-bottom:12px"><b>Repetidas:</b> Cuando completes la colección, en promedio te van a sobrar <b>' + Math.round(promRepetidas) + ' cartas repetidas</b>.</div>' +
+  '<div style="margin-bottom:12px; background:#fff8d6; padding:10px; border-radius:8px;"><b>⏳ Relojes necesarios (12 por sobre):</b><br>' +
+  'Media: <b>' + relojesMedia.toLocaleString() + ' relojes</b><br>' +
+  'Mediana: <b>' + relojesMediana.toLocaleString() + ' relojes</b><br>' +
+  'P90: <b>' + relojesP90.toLocaleString() + ' relojes</b></div>' +
+  '<div><b>¿Por qué tantos sobres?</b> Si todas las cartas salieran con la misma suerte, solo necesitarías ' + Math.round(bench) + ' sobres. Pero como las raras salen menos, en realidad necesitas ' + Math.round(med) + ' sobres, ' + textoDif + '</div>';
     'Pero como las raras salen menos, en realidad necesitas <b>'+Math.round(med)+' sobres</b>, o sea <b>'+Math.round(med-bench)+' sobres más</b> por culpa de las raras.';
   dibujarGrafico(resultados);
 }
