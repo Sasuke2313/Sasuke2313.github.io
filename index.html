@@ -190,6 +190,8 @@
     <option value="103">Crisis Dimensional - Todas - 100% Completa (103 cartas)</option>
     <option value="69">Arboleda de Eevee - "Colección Completa" (69 cartas)</option>
     <option value="103">Arboleda de Eevee - Todas - 100% Completa (103 cartas)</option>
+    <option value="71">Manantial Oculto - Todas - 100% Completa (103 cartas)</option>
+    <option value="105">Manantial Oculto  - Todas - 100% Completa (103 cartas)</option>
   </select>
 
   <label for="simulaciones">Número de simulaciones (ej. 1000):</label>
@@ -469,10 +471,43 @@ function abrirSobreEevee() {
     drawCarta5_Eevee()
   ];
 }
+  
+// --- MANANTIAL OCULTO - 105 Cartas ---
+function drawCarta123_Manantial() {
+  return Math.floor(Math.random() * 32); // 0-31: 1 rombo
+}
 
+function drawCarta4_Manantial() {
+  const r = Math.random() * 100;
+  if (r < 88.99) return 32 + Math.floor(Math.random() * 23); // 32-54: 2 rombos
+  if (r < 93.942) return 55 + Math.floor(Math.random() * 11); // 55-65: 3 rombos, son 11
+  if (r < 95.607) return 66 + Math.floor(Math.random() * 5); // 66-70: 4 rombos
+  if (r < 98.177) return 71 + Math.floor(Math.random() * 6); // 71-76: 1 estrella
+  if (r < 98.669) return 77 + Math.floor(Math.random() * 12); // 77-88: 2 estrellas
+  if (r < 98.891) return 89; // 89: 3 estrellas
+  if (r < 99.601) return 90 + Math.floor(Math.random() * 10); // 90-99: Shiny
+  if (r < 99.933) return 100 + Math.floor(Math.random() * 4); // 100-103: Shiny doble
+  return 104; // 104: Corona
+}
+
+function drawCarta5_Manantial() {
+  const r = Math.random() * 100;
+  if (r < 56.0) return 32 + Math.floor(Math.random() * 23); // 32-54: 2 rombos
+  if (r < 75.808) return 55 + Math.floor(Math.random() * 11); // 55-65: 3 rombos, son 11
+  if (r < 82.468) return 66 + Math.floor(Math.random() * 5); // 66-70: 4 rombos
+  if (r < 92.753) return 71 + Math.floor(Math.random() * 6); // 71-76: 1 estrella
+  if (r < 94.745) return 77 + Math.floor(Math.random() * 12); // 77-88: 2 estrellas
+  if (r < 95.633) return 89; // 89: 3 estrellas
+  if (r < 98.483) return 90 + Math.floor(Math.random() * 10); // 90-99: Shiny
+  if (r < 99.815) return 100 + Math.floor(Math.random() * 4); // 100-103: Shiny doble
+  return 104; // 104: Corona
+}
+  
+  
 function abrirSobreSegunN(n,tipo) {
-  if (tipo === 'crisis') return abrirSobreCrisis();
-  if (tipo === 'eevee') return abrirSobreEevee();
+  if (tipo === 'Crisis') return abrirSobreCrisis();
+  if (tipo === 'Eevee') return abrirSobreEevee();
+  if (tipo === 'Manantial') return abrirSobreEevee();
   if (n === 68 || n === 86) return abrirSobreIsla();
   if (n === 75 || n === 96) return abrirSobreLuz();
   if (n === 72 || n === 111) return abrirSobreFestival();
