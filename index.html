@@ -195,12 +195,28 @@ function simular(){
   const n=parseInt(nStr);
   const sims=parseInt(document.getElementById('simulaciones').value)||1000;
   const cartasYa=parseInt(document.getElementById('cartasQueTengo').value)||0;
-  const faltantesRarezas=leerFaltantes();
-  const totalFaltantes=faltantesRarezas.length;
-
+  let faltantesRarezas = leerFaltantes();
+  let totalFaltantes = faltantesRarezas.length;
+// Caso primera vez: tienes 0 y no pusiste nada en faltantes
+// Lo llenamos en automático con la colección completa
+if(cartasYa === 0 && totalFaltantes === 0){
+  faltantesRarezas = [];
+  // pool es tu pool completo de esa expansión, el que ya usas para simular
+  const poolCompleto = construirPool(tipo, n);
+  for(let carta of poolCompleto){
+    faltantesRarezas.push(carta.rareza);
+  }
+  totalFaltantes = faltantesRarezas.length;
+  // Rellenamos los cuadritos para que el usuario vea qué se calculó
+  // Esto es para que no se quede en 0 en pantalla
+  if(typeof mostrarFaltantesEnInputs === 'function'){
+    mostrarFaltantesEnInputs(faltantesRarezas);
+  }
+  document.getElementById('avisoFaltantes').innerText = 'Empezando de cero, calculamos con la colección completa: ' + n + ' cartas.';
+}
   // Validación: tienes + faltan debe ser = n.
   if(cartasYa + totalFaltantes !== n){
-    document.getElementById('avisoFaltantes').innerText=`Oye güey, no cuadra: tienes ${cartasYa} + te faltan ${totalFaltantes} = ${cartasYa+totalFaltantes}, pero la colección es de ${n}. Ajusta lo que te falta, güey.`;
+    document.getElementById('avisoFaltantes').innerText=`Oye bro,algo  no cuadra: tienes ${cartasYa} + te faltan ${totalFaltantes} = ${cartasYa+totalFaltantes}, pero la colección es de ${n}. Ajusta lo que te falta.`;
     return;
   }
   if(totalFaltantes===0){
@@ -217,7 +233,7 @@ function simular(){
   const resultados=[], listaRepetidas=[];
   for(let s=0;s<sims;s++){
     // Elegimos al azar QUÉ cartas específicas te faltan dentro de esa rareza.
-    // Ej: si te faltan 2 de ♦♦♦, elegimos 2 random de las 8 de ♦♦♦, güey. No las últimas.
+    // Ej: si te faltan 2 de ♦♦♦, elegimos 2 random de las 8 de ♦♦♦. No las últimas.
     const porRareza={};
     poolN.forEach(id=>{ const r=id.split('-')[0]; if(!porRareza[r]) porRareza[r]=[]; porRareza[r].push(id); });
     const faltantesSet=new Set();
