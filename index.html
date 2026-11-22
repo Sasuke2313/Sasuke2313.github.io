@@ -200,18 +200,34 @@ function simular(){
 // Caso primera vez: tienes 0 y no pusiste nada en faltantes
 // Lo llenamos en automático con la colección completa
 if(cartasYa === 0 && totalFaltantes === 0){
-  faltantesRarezas = [];
-  // pool es tu pool completo de esa expansión, el que ya usas para simular
-  const poolCompleto = construirPool(tipo, n);
-  for(let carta of poolCompleto){
-    faltantesRarezas.push(carta.rareza);
-  }
+  const inputs = document.querySelectorAll('input[id^="falta-"]');
+
+  inputs.forEach(inp => {
+    let maximo = inp.max || inp.dataset.total || inp.getAttribute('data-max') || inp.placeholder;
+
+    // Si no tiene max, lo sacamos del texto de al lado: "♦ (32)" -> 32
+    if(!maximo && inp.parentElement){
+      let texto = inp.parentElement.textContent;
+      let m = texto.match(/\((\d+)\)/) || texto.match(/\/\s*(\d+)/) || texto.match(/de\s+(\d+)/);
+      if(m) maximo = m[1];
+    }
+
+    if(maximo){
+      inp.value = maximo;
+    }
+  });
+
+  // Volvemos a leer ya con los valores llenos
+  faltantesRarezas = leerFaltantes();
   totalFaltantes = faltantesRarezas.length;
-  // Rellenamos los cuadritos para que el usuario vea qué se calculó
-  // Esto es para que no se quede en 0 en pantalla
-  if(typeof mostrarFaltantesEnInputs === 'function'){
-    mostrarFaltantesEnInputs(faltantesRarezas);
-  }
+
+  document.getElementById('avisoFaltantes').innerText = 'Empezando de cero, calculamos con la colección completa: ' + n + ' cartas.';
+}
+
+  // Volvemos a leer ya con los valores llenos
+  faltantesRarezas = leerFaltantes();
+  totalFaltantes = faltantesRarezas.length;
+
   document.getElementById('avisoFaltantes').innerText = 'Empezando de cero, calculamos con la colección completa: ' + n + ' cartas.';
 }
   // Validación: tienes + faltan debe ser = n.
