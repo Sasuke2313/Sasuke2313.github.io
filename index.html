@@ -193,6 +193,24 @@
     <option value="Eevee-103">Arboleda de Eevee - Todas - 100% Completa (103 cartas)</option>
     <option value="71">Manantial Oculto - "Coleccion Completa" (71 cartas)</option>
     <option value="Manantial-105">Manantial Oculto  - Todas - 100% Compa (105 cartas)</option>
+    <option value="Fuego-69">Fuego Carmesí - "Colección Completa" (69)</option>
+    <option value="Fuego-89">Fuego Carmesí - Todas - 100% completa (89)</option>
+    <option value="Desfile-155">Desfile de Ensueño - "Colección Completa" (155)</option>
+    <option value="Desfile-206">Desfile de Ensueño - Todas - 100% completa (206)</option>
+    <option value="Encantos-93">Encantos de Paldea - "Colección Completa" (93)</option>
+    <option value="Encantos-117">Encantos de Paldea - Todas -  100% completa (117)</option>
+    <option value="Megavariocolor-69">Megavariocolor - "Colección Completa" (69)</option>
+    <option value="Megavariocolor-87">Megavariocolor - Todas 100% completa (87)</option>
+    <option value="Aura-155">Aura Pulsante - "Colección Completa" (155)</option>
+    <option value="Aura-206">Aura Pulsante - Todas- 100% completa (206)</option>
+    <option value="Impulso-74">Impulso Paradojico -  "Colección Completa" (74)</option>
+    <option value="Impulso-95">Impulso Paradojico - Todas- 100% completa (95)</option>
+    <option value="Maravillas-69">Maravillas Cotidianas - "Colección Completa" (69)</option>
+    <option value="Maravillas-92">Maravillas Cotidianas - Todas - 100% completa (92)</option>
+    <option value="Dominador-155">Dominador de los Cielos - "Colección Completa" (155)</option>
+    <option value="Dominador-205">Dominador de los Cielos - Todas - 100% completa (205)</option>
+    <option value="Ambicion-72">La Ambición del Equipo Rocket - "Colección Completa" (72)</option>
+    <option value="Ambicion-96 ">La Ambición del Equipo Rocket - Todas -  100% completa (96)</option>
   </select>
 
   <label for="simulaciones">Número de simulaciones (ej. 1000):</label>
@@ -221,7 +239,7 @@
       <b id="repetidas">-</b>
     </div>
     <div class="stat2">
-      <span>Benchmark uniforme (si todas salieran igual)</span>
+      <span>Benchmark uniforme (si Todas salieran igual)</span>
       <b id="benchmark">-</b>
     </div>
   </div>
@@ -285,232 +303,114 @@ function dibujarGrafico(datos) {
   ctx.fillText(min + ' sobres', 5, c.height - 5);
   ctx.fillText(max + ' sobres', c.width - 80, c.height - 5);
 }
+// ===== Serie A y B =====
 
-// --- ISLA SINGULAR ---
-function drawCarta123_Isla() {
-  const r = Math.random() * 100;
-  if (r < 61.48) return Math.floor(Math.random() * 32);
-  if (r < 92.31) return 32 + Math.floor(Math.random() * 28);
-  if (r < 99.38) return 60 + Math.floor(Math.random() * 4);
-  return 64 + Math.floor(Math.random() * 4);
-}
-function drawCarta4_Isla() {
-  const r = Math.random() * 100;
-  if (r < 80.22) return 32 + Math.floor(Math.random() * 28);
-  if (r < 96.02) return 60 + Math.floor(Math.random() * 4);
-  if (r < 99.07) return 64 + Math.floor(Math.random() * 4);
-  if (r < 99.83) return 68 + Math.floor(Math.random() * 11);
-  if (r < 99.98) return 79 + Math.floor(Math.random() * 6);
-  return 85;
-}
-function drawCarta5_Isla() {
-  const r = Math.random() * 100;
-  if (r < 46.15) return 32 + Math.floor(Math.random() * 28);
-  if (r < 75.0) return 60 + Math.floor(Math.random() * 4);
-  if (r < 89.36) return 64 + Math.floor(Math.random() * 4);
-  if (r < 98.36) return 68 + Math.floor(Math.random() * 11);
-  if (r < 99.90) return 79 + Math.floor(Math.random() * 6);
-  return 85;
-}
-function abrirSobreIsla() {
-  return [
-    drawCarta123_Isla(),
-    drawCarta123_Isla(),
-    drawCarta123_Isla(),
-    drawCarta4_Isla(),
-    drawCarta5_Isla()
-  ];
-}
+const EXP = {
+  // Serie A
+  Isla: {
+    c123: [["♦",32,61.48],["♦♦",28,30.83],["♦♦♦",4,7.07],["♦♦♦♦",4,0.62]],
+    c4: [["♦♦",28,80.22],["♦♦♦",4,15.8],["♦♦♦♦",4,3.05],["★",11,0.76],["★★",6,0.15],["★★★",1,0.02]],
+    c5: [["♦♦",28,46.15],["♦♦♦",4,28.85],["♦♦♦♦",4,14.36],["★",11,9.0],["★★",6,1.54],["★★★",1,0.10]]
+  },
+  Luz: {
+    c123: [["♦",31,50.47],["♦♦",33,40.87],["♦♦♦",10,8.17],["♦♦♦♦",1,0.49]],
+    c4: [["♦♦",33,80.45],["♦♦♦",10,12.40],["♦♦♦♦",1,6.62],["★",17,0.50],["★★",4,0.03]],
+    c5: [["♦♦",33,46.05],["♦♦♦",10,23.70],["♦♦♦♦",1,17.46],["★",17,12.03],["★★",4,0.76]]
+  },
+  Festival: {
+    c123: [["♦",32,100]],
+    c4: [["♦♦",22,88.99],["♦♦♦",9,4.95],["♦♦♦♦",9,1.665],["★",6,2.568],["★★",17,0.493],["★★★",1,0.222],["✨",10,0.71],["✨✨",4,0.332],["👑",1,0.07]],
+    c5: [["♦♦",22,56.0],["♦♦♦",9,19.809],["♦♦♦♦",9,6.66],["★",6,10.284],["★★",17,1.989],["★★★",1,0.888],["✨",10,2.85],["✨✨",4,1.332],["👑",1,0.188]]
+  },
+  Crisis: {
+    c123: [["♦",32,100]],
+    c4: [["♦♦",24,88.99],["♦♦♦",8,4.952],["♦♦♦♦",5,1.665],["★",6,2.568],["★★",12,0.492],["★★★",1,0.222],["✨",10,0.71],["✨✨",4,0.332],["👑",1,0.069]],
+    c5: [["♦♦",24,56.0],["♦♦♦",8,19.808],["♦♦♦♦",5,6.66],["★",6,10.284],["★★",12,1.992],["★★★",1,0.888],["✨",10,2.85],["✨✨",4,1.332],["👑",1,0.186]]
+  },
+  Eevee: {
+    c123: [["♦",32,100]],
+    c4: [["♦♦",23,88.99],["♦♦♦",8,4.952],["♦♦♦♦",6,1.662],["★",9,2.565],["★★",13,0.494],["★★★",1,0.222],["✨",10,0.71],["✨✨",4,0.332],["👑",1,0.073]],
+    c5: [["♦♦",23,56.0],["♦♦♦",8,19.808],["♦♦♦♦",6,6.66],["★",9,10.287],["★★",13,1.989],["★★★",1,0.888],["✨",10,2.85],["✨✨",4,1.332],["👑",1,0.186]]
+  },
+  Manantial: {
+    c123: [["♦",32,100]],
+    c4: [["♦♦",23,88.99],["♦♦♦",11,4.952],["♦♦♦♦",5,1.665],["★",6,2.57],["★★",12,0.492],["★★★",1,0.222],["✨",10,0.71],["✨✨",4,0.332],["👑",1,0.067]],
+    c5: [["♦♦",23,56.0],["♦♦♦",11,19.808],["♦♦♦♦",5,6.66],["★",6,10.285],["★★",12,1.992],["★★★",1,0.888],["✨",10,2.85],["✨✨",4,1.332],["👑",1,0.185]]
+  },
+  // Serie B
+  Fuego: {
+    c123: [["♦",32,100]],
+    c4: [["♦♦",24,89.99],["♦♦♦",8,5],["♦♦♦♦",5,0.925],["★",6,2.568],["★★",11,0.495],["★★★",1,0.222],["👑",2,0.04]],
+    c5: [["♦♦",24,60],["♦♦♦",8,20],["♦♦♦♦",5,6.665],["★",6,10.284],["★★",11,1.991],["★★★",1,0.888],["👑",2,0.158]]
+  },
+  Desfile: {
+    c123: [["♦",66,100]],
+    c4: [["♦♦",51,89.99],["♦♦♦",28,5],["♦♦♦♦",10,1.667],["★",24,2.572],["★★",23,0.5],["★★★",2,0.222],["👑",2,0.04]],
+    c5: [["♦♦",51,59.998],["♦♦♦",28,20],["♦♦♦♦",10,6.667],["★",24,10.286],["★★",23,2],["★★★",2,0.889],["👑",2,0.16]]
+  },
+  Encantos: {
+    c123: [["♦",43,100]],
+    c4: [["♦♦",33,89.99],["♦♦♦",12,5],["♦♦♦♦",5,1.667],["★",6,2.572],["★★",15,0.5],["★★★",1,0.222],["👑",2,0.04]],
+    c5: [["♦♦",33,59.998],["♦♦♦",12,20],["♦♦♦♦",5,6.667],["★",6,10.286],["★★",15,2],["★★★",1,0.889],["👑",2,0.16]]
+  },
+  Megavariocolor: {
+    c123: [["♦",33,100]],
+    c4: [["♦♦",23,89.99],["♦♦♦",8,5],["♦♦♦♦",5,1.667],["★",6,2.572],["★★",9,0.5],["★★★",1,0.222],["👑",2,0.04]],
+    c5: [["♦♦",23,59.998],["♦♦♦",8,20],["♦♦♦♦",5,6.667],["★",6,10.286],["★★",9,2],["★★★",1,0.889],["👑",2,0.16]]
+  },
+  Aura: {
+    c123: [["♦",65,100]],
+    c4: [["♦♦",51,89.99],["♦♦♦",29,5],["♦♦♦♦",10,1.667],["★",24,2.572],["★★",23,0.5],["★★★",2,0.222],["👑",2,0.04]],
+    c5: [["♦♦",51,59.998],["♦♦♦",29,20],["♦♦♦♦",10,6.667],["★",24,10.286],["★★",23,2],["★★★",2,0.889],["👑",2,0.16]]
+  },
+  Impulso: {
+    c123: [["♦",32,100]],
+    c4: [["♦♦",25,89.99],["♦♦♦",12,5],["♦♦♦♦",5,1.667],["★",6,2.572],["★★",12,0.5],["★★★",1,0.222],["👑",2,0.04]],
+    c5: [["♦♦",25,59.998],["♦♦♦",12,20],["♦♦♦♦",5,6.667],["★",6,10.286],["★★",12,2],["★★★",1,0.889],["👑",2,0.16]]
+  },
+  Maravillas: {
+    c123: [["♦",29,100]],
+    c4: [["♦♦",27,89.99],["♦♦♦",8,5],["♦♦♦♦",5,1.667],["★",8,2.572],["★★",12,0.499],["★★★",1,0.222],["👑",2,0.04]],
+    c5: [["♦♦",27,59.998],["♦♦♦",8,20],["♦♦♦♦",5,6.667],["★",8,10.286],["★★",12,2],["★★★",1,0.889],["👑",2,0.16]]
+  },
+  Dominador: {
+    c123: [["♦",66,100]],
+    c4: [["♦♦",51,89.99],["♦♦♦",28,5],["♦♦♦♦",10,1.667],["★",24,2.572],["★★",22,0.5],["★★★",2,0.222],["👑",2,0.04]],
+    c5: [["♦♦",51,59.998],["♦♦♦",28,20],["♦♦♦♦",10,6.667],["★",24,10.286],["★★",22,2],["★★★",2,0.889],["👑",2,0.16]]
+  },
+  Rocket: {
+    c123: [["♦",32,100]],
+    c4: [["♦♦",26,89.99],["♦♦♦",8,5],["♦♦♦♦",6,1.667],["★",6,2.572],["★★",15,0.5],["★★★",1,0.222],["👑",2,0.04]],
+    c5: [["♦♦",26,59.998],["♦♦♦",8,20],["♦♦♦♦",6,6.667],["★",6,10.286],["★★",15,2],["★★★",1,0.889],["👑",2,0.16]]
+  }
+};
 
-// --- LUZ TRIUNFAL ---
-function drawCarta123_Luz() {
-  const r = Math.random() * 100;
-  if (r < 50.47) return Math.floor(Math.random() * 31);
-  if (r < 91.34) return 31 + Math.floor(Math.random() * 33);
-  if (r < 99.51) return 64 + Math.floor(Math.random() * 10);
-  return 74;
-}
-function drawCarta4_Luz() {
-  const r = Math.random() * 100;
-  if (r < 80.45) return 31 + Math.floor(Math.random() * 33);
-  if (r < 92.85) return 64 + Math.floor(Math.random() * 10);
-  if (r < 99.47) return 74;
-  if (r < 99.97) return 75 + Math.floor(Math.random() * 17);
-  return 92 + Math.floor(Math.random() * 4);
-}
-function drawCarta5_Luz() {
-  const r = Math.random() * 100;
-  if (r < 46.05) return 31 + Math.floor(Math.random() * 33);
-  if (r < 69.75) return 64 + Math.floor(Math.random() * 10);
-  if (r < 87.21) return 74;
-  if (r < 99.24) return 75 + Math.floor(Math.random() * 17);
-  return 92 + Math.floor(Math.random() * 4);
-}
-function abrirSobreLuz() {
-  return [
-    drawCarta123_Luz(),
-    drawCarta123_Luz(),
-    drawCarta123_Luz(),
-    drawCarta4_Luz(),
-    drawCarta5_Luz()
-  ];
-}
-
-// --- FESTIVAL BRILLANTE - 111 cartas ---
-function drawCarta123_Festival() {
-  return Math.floor(Math.random() * 32);
-}
-function drawCarta4_Festival() {
-  const r = Math.random() * 100;
-  if (r < 88.99) return 32 + Math.floor(Math.random() * 22);
-  if (r < 93.94) return 54 + Math.floor(Math.random() * 9);
-  if (r < 95.605) return 63 + Math.floor(Math.random() * 9);
-  if (r < 98.173) return 72 + Math.floor(Math.random() * 6);
-  if (r < 98.666) return 78 + Math.floor(Math.random() * 17);
-  if (r < 98.888) return 95;
-  if (r < 99.598) return 96 + Math.floor(Math.random() * 10);
-  if (r < 99.93) return 106 + Math.floor(Math.random() * 4);
-  return 110;
-}
-function drawCarta5_Festival() {
-  const r = Math.random() * 100;
-  if (r < 56.0) return 32 + Math.floor(Math.random() * 22);
-  if (r < 75.809) return 54 + Math.floor(Math.random() * 9);
-  if (r < 82.469) return 63 + Math.floor(Math.random() * 9);
-  if (r < 92.753) return 72 + Math.floor(Math.random() * 6);
-  if (r < 94.742) return 78 + Math.floor(Math.random() * 17);
-  if (r < 95.63) return 95;
-  if (r < 98.48) return 96 + Math.floor(Math.random() * 10);
-  if (r < 99.812) return 106 + Math.floor(Math.random() * 4);
-  return 110;
-}
-function abrirSobreFestival() {
-  return [
-    drawCarta123_Festival(),
-    drawCarta123_Festival(),
-    drawCarta123_Festival(),
-    drawCarta4_Festival(),
-    drawCarta5_Festival()
-  ];
-}
-// --- CRISIS DIMENSIONAL - 103 cartas ---
-function drawCarta123_Crisis() {
-  return Math.floor(Math.random() * 32);
-}
-function drawCarta4_Crisis() {
-  const r = Math.random() * 100;
-  if (r < 88.99) return 32 + Math.floor(Math.random() * 24);
-  if (r < 93.942) return 56 + Math.floor(Math.random() * 8);
-  if (r < 95.607) return 64 + Math.floor(Math.random() * 5);
-  if (r < 98.175) return 69 + Math.floor(Math.random() * 6);
-  if (r < 98.667) return 75 + Math.floor(Math.random() * 12);
-  if (r < 98.889) return 87;
-  if (r < 99.599) return 88 + Math.floor(Math.random() * 10);
-  if (r < 99.931) return 98 + Math.floor(Math.random() * 4);
-  return 102;
-}
-function drawCarta5_Crisis() {
-  const r = Math.random() * 100;
-  if (r < 56.0) return 32 + Math.floor(Math.random() * 24);
-  if (r < 75.808) return 56 + Math.floor(Math.random() * 8);
-  if (r < 82.468) return 64 + Math.floor(Math.random() * 5);
-  if (r < 92.752) return 69 + Math.floor(Math.random() * 6);
-  if (r < 94.744) return 75 + Math.floor(Math.random() * 12);
-  if (r < 95.632) return 87;
-  if (r < 98.482) return 88 + Math.floor(Math.random() * 10);
-  if (r < 99.814) return 98 + Math.floor(Math.random() * 4);
-  return 102;
-}
-function abrirSobreCrisis() {
-  return [
-    drawCarta123_Crisis(),
-    drawCarta123_Crisis(),
-    drawCarta123_Crisis(),
-    drawCarta4_Crisis(),
-    drawCarta5_Crisis()
-  ];
+function sortearCarta(lista) {
+  let r = Math.random() * 100, acum = 0;
+  for (let [rare, count, total] of lista) {
+    acum += total;
+    if (r < acum) return rare + "-" + Math.floor(Math.random() * count);
+  }
+  let [rare, count] = lista[lista.length-1];
+  return rare + "-" + Math.floor(Math.random() * count);
 }
 
-// --- ARBOLEDA DE EEVEE - 107 cartas ---
-function drawCarta123_Eevee() {
-  return Math.floor(Math.random() * 32);
-}
-function drawCarta4_Eevee() {
-  const r = Math.random() * 100;
-  if (r < 88.99) return 32 + Math.floor(Math.random() * 23);
-  if (r < 93.942) return 55 + Math.floor(Math.random() * 8);
-  if (r < 95.604) return 63 + Math.floor(Math.random() * 6);
-  if (r < 98.169) return 69 + Math.floor(Math.random() * 9);
-  if (r < 98.663) return 78 + Math.floor(Math.random() * 13);
-  if (r < 98.885) return 91;
-  if (r < 99.595) return 92 + Math.floor(Math.random() * 10);
-  if (r < 99.927) return 102 + Math.floor(Math.random() * 4);
-  return 106;
-}
-function drawCarta5_Eevee() {
-  const r = Math.random() * 100;
-  if (r < 56.0) return 32 + Math.floor(Math.random() * 23);
-  if (r < 75.808) return 55 + Math.floor(Math.random() * 8);
-  if (r < 82.468) return 63 + Math.floor(Math.random() * 6);
-  if (r < 92.755) return 69 + Math.floor(Math.random() * 9);
-  if (r < 94.744) return 78 + Math.floor(Math.random() * 13);
-  if (r < 95.632) return 91;
-  if (r < 98.482) return 92 + Math.floor(Math.random() * 10);
-  if (r < 99.814) return 102 + Math.floor(Math.random() * 4);
-  return 106;
-}
-function abrirSobreEevee() {
-  return [
-    drawCarta123_Eevee(),
-    drawCarta123_Eevee(),
-    drawCarta123_Eevee(),
-    drawCarta4_Eevee(),
-    drawCarta5_Eevee()
-  ];
-}
-  
-// --- MANANTIAL OCULTO - 105 Cartas ---
-function drawCarta123_Manantial() {
-  return Math.floor(Math.random() * 32); // 0-31: 1 rombo
+function abrirSobrePorTipo(tipo) {
+  let e = EXP[tipo];
+  return [sortearCarta(e.c123), sortearCarta(e.c123), sortearCarta(e.c123), sortearCarta(e.c4), sortearCarta(e.c5)];
 }
 
-function drawCarta4_Manantial() {
-  const r = Math.random() * 100;
-  if (r < 88.99) return 32 + Math.floor(Math.random() * 23); // 32-54: 2 rombos
-  if (r < 93.942) return 55 + Math.floor(Math.random() * 11); // 55-65: 3 rombos, son 11
-  if (r < 95.607) return 66 + Math.floor(Math.random() * 5); // 66-70: 4 rombos
-  if (r < 98.177) return 71 + Math.floor(Math.random() * 6); // 71-76: 1 estrella
-  if (r < 98.669) return 77 + Math.floor(Math.random() * 12); // 77-88: 2 estrellas
-  if (r < 98.891) return 89; // 89: 3 estrellas
-  if (r < 99.601) return 90 + Math.floor(Math.random() * 10); // 90-99: Shiny
-  if (r < 99.933) return 100 + Math.floor(Math.random() * 4); // 100-103: Shiny doble
-  return 104; // 104: Corona
-}
-
-function drawCarta5_Manantial() {
-  const r = Math.random() * 100;
-  if (r < 56.0) return 32 + Math.floor(Math.random() * 23); // 32-54: 2 rombos
-  if (r < 75.808) return 55 + Math.floor(Math.random() * 11); // 55-65: 3 rombos, son 11
-  if (r < 82.468) return 66 + Math.floor(Math.random() * 5); // 66-70: 4 rombos
-  if (r < 92.753) return 71 + Math.floor(Math.random() * 6); // 71-76: 1 estrella
-  if (r < 94.745) return 77 + Math.floor(Math.random() * 12); // 77-88: 2 estrellas
-  if (r < 95.633) return 89; // 89: 3 estrellas
-  if (r < 98.483) return 90 + Math.floor(Math.random() * 10); // 90-99: Shiny
-  if (r < 99.815) return 100 + Math.floor(Math.random() * 4); // 100-103: Shiny doble
-  return 104; // 104: Corona
-}
-  
-  
 function abrirSobreSegunN(n,tipo) {
-  if (tipo === 'Crisis') return abrirSobreCrisis();
-  if (tipo === 'Eevee') return abrirSobreEevee();
-  if (tipo === 'Manantial') return abrirSobreManantial();
-  if (n === 68 || n === 86) return abrirSobreIsla();
-  if (n === 75 || n === 96) return abrirSobreLuz();
-  if (n === 72 || n === 111) return abrirSobreFestival();
-  return abrirSobreIsla();
+  if (EXP[tipo]) return abrirSobrePorTipo(tipo);
+  if (n === 68 || n === 86) return abrirSobrePorTipo('Isla');
+  if (n === 75 || n === 96) return abrirSobrePorTipo('Luz');
+  if (n === 72 || n === 111) return abrirSobrePorTipo('Festival');
+  return abrirSobrePorTipo('Isla');
 }
+  
+  
 
+    
 function simular() {
   const sel = document.getElementById('expansion').value;
   const n = parseInt(sel.split('-')[1] || sel);
@@ -568,7 +468,7 @@ function simular() {
   'La mitad de la gente lo logra con <b>' + Math.round(medn) + ' sobres o menos</b>. ' +
   'Y 9 de cada 10 personas lo logran con <b>' + Math.round(p90) + ' sobres o menos</b>.<br><br>' +
   '<b>Repetidas:</b> Cuando por fin completas la colección, en promedio te van a sobrar <b>' + Math.round(promRepetidas) + ' cartas repetidas</b>. O sea, cartas que ya tenías.<br><br>' +
-  '<b>¿Por qué tantos sobres?</b> Si todas las cartas salieran con la misma suerte, solo necesitarías <b>' + Math.round(bench) + ' sobres</b>. ' +
+  '<b>¿Por qué tantos sobres?</b> Si Todas las cartas salieran con la misma suerte, solo necesitarías <b>' + Math.round(bench) + ' sobres</b>. ' +
   'Pero como las raras salen menos, en realidad necesitas <b>' + Math.round(med) + ' sobres</b>, o sea <b>' + Math.round(med - bench) + ' sobres más</b> por culpa de las raras.';
 
   dibujarGrafico(resultados);
