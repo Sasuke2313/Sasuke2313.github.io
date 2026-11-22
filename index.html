@@ -75,7 +75,7 @@
   #faltanSobres {
     margin-top: 12px;
     padding: 12px;
-    background: #333333;
+    background: #FFF3CD;
     border: 1px solid #FFD60A;
     border-radius: 10px;
     font-weight: bold;
@@ -170,7 +170,7 @@
 <body>
 
 <div class="firma">
-  <b>Christian Lagunes C.</b>
+  <b>Christian Lagunes</b>
   Licencia MIT
 </div>
 
@@ -268,7 +268,7 @@ function dibujarGrafico(datos) {
     conteo[i]++;
   });
   const maxC = Math.max(...conteo);
-  ctx.fillStyle = '#2D6A4F';
+  ctx.fillStyle = '#2A75BB;
   conteo.forEach((v, i) => {
     const h = (v / maxC) * (c.height - 40);
     ctx.fillRect(i * (c.width / bins) + 2, c.height - 20 - h, (c.width / bins) - 4, h);
