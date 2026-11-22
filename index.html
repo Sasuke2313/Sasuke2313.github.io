@@ -5,464 +5,203 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Simulador Montecarlo Pokemon TCGP - Christian Lagunes</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #FFCB05;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='28' fill='none' stroke='%23ffffff' stroke-opacity='0.25' stroke-width='4'/%3E%3Crect x='32' y='56' width='56' height='8' fill='%23ffffff' fill-opacity='0.25'/%3E%3Ccircle cx='60' cy='60' r='8' fill='%23ffffff' fill-opacity='0.25'/%3E%3C/svg%3E");
-    margin: 0;
-    padding: 20px;
-  }
-  .firma {
-    position: fixed;
-    top: 12px;
-    right: 16px;
-    background: rgba(255,255,255,0.95);
-    padding: 8px 12px;
-    border-radius: 10px;
-    font-size: 12px;
-    text-align: right;
-    z-index: 99;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .firma b { display: block; }
-  .card {
-    max-width: 800px;
-    margin: 50px auto 20px;
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  }
-  h1 {
-    text-align: center;
-    color: #000000;
-    margin: 5px 0 2px;
-  }
-  .subtitle {
-    text-align: center;
-    color: #666;
-    margin-top: 14px;
-    font-size: 16px;
-    line-height: 1.5;
-  }
-  label {
-    font-weight: bold;
-    display: block;
-    margin-top: 15px;
-    color: #333;
-  }
-  select, input[type="number"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
-    box-sizing: border-box;
-  }
-  button {
-    width: 100%;
-    padding: 13px;
-    margin-top: 20px;
-    background: #e3350d;
-    color: #ffff;
-    border: none;
-    border-radius: 10px;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  button:hover { background: #1B4332; }
-  #faltanSobres {
-    margin-top: 12px;
-    padding: 12px;
-    background: #FFF3CD;
-    border: 1px solid #FFD60A;
-    border-radius: 10px;
-    font-weight: bold;
-    text-align: center;
-    font-size: 17px;
-    color: #333;
-  }
-  #resultado {
-    margin-top: 15px;
-    background: #E8F5E9;
-    border-radius: 10px;
-    padding: 15px;
-    font-size: 14px;
-    line-height: 1.6;
-  }
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-top: 15px;
-  }
-  .stat {
-    background: #f7f7f7;
-    border-radius: 10px;
-    padding: 12px;
-    text-align: center;
-  }
-  .stat span {
-    display: block;
-    color: #666;
-    font-size: 12px;
-  }
-  .stat b {
-    display: block;
-    font-size: 28px;
-    margin-top: 4px;
-    color: #111;
-  }
-  .stats2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  .stat2 {
-    background: #E8F5E9;
-    border-radius: 10px;
-    padding: 12px;
-    text-align: center;
-  }
-  .stat2 span {
-    display: block;
-    color: #555;
-    font-size: 12px;
-  }
-  .stat2 b {
-    display: block;
-    font-size: 24px;
-    margin-top: 4px;
-    color: #111;
-  }
-  #graficaTitulo {
-    margin-top: 22px;
-    text-align: center;
-  }
-  #graficaTitulo h3 { margin: 0; color: #333; }
-  #graficaTitulo p {
-    color: #333 !important;
-    font-size: 14px;
-    margin: 6px 0 0;
-    line-height: 1.5;
-  }
-  canvas {
-    width: 100%;
-    max-height: 300px;
-    margin-top: 10px;
-    border: 1px solid #eee;
-    border-radius: 8px;
-  }
-  .author {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 12px;
-    color: #888;
-  }
-  @media (max-width: 600px) {
-    .stats { grid-template-columns: repeat(2, 1fr); }
-    .stats2 { grid-template-columns: 1fr; }
-  }
+  body{font-family:Arial,sans-serif;background-color:#FFCB05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='28' fill='none' stroke='%23ffffff' stroke-opacity='0.25' stroke-width='4'/%3E%3Crect x='32' y='56' width='56' height='8' fill='%23ffffff' fill-opacity='0.25'/%3E%3Ccircle cx='60' cy='60' r='8' fill='%23ffffff' fill-opacity='0.25'/%3E%3C/svg%3E");margin:0;padding:20px}
+  .firma{position:fixed;top:12px;right:16px;background:rgba(255,255,255,.95);padding:8px 12px;border-radius:10px;font-size:12px;text-align:right;z-index:99;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+  .firma b{display:block}
+  .card{max-width:800px;margin:50px auto 20px;background:#fff;padding:25px;border-radius:15px;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+  h1{text-align:center;color:#000;margin:5px 0 2px}
+  .subtitle{text-align:center;color:#666;margin-top:14px;font-size:16px;line-height:1.5}
+  label{font-weight:bold;display:block;margin-top:15px;color:#333}
+  select,input[type="number"]{width:100%;padding:10px;margin-top:5px;border:1px solid #ccc;border-radius:8px;font-size:15px;box-sizing:border-box}
+  button{width:100%;padding:13px;margin-top:20px;background:#e3350d;color:#fff;border:none;border-radius:10px;font-size:17px;font-weight:bold;cursor:pointer}
+  button:hover{background:#1B4332}
+  #faltanSobres{margin-top:12px;padding:12px;background:#FFF3CD;border:1px solid #FFD60A;border-radius:10px;font-weight:bold;text-align:center;font-size:17px;color:#333}
+  #resultado{margin-top:15px;background:#E8F5E9;border-radius:10px;padding:15px;font-size:14px;line-height:1.6}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:15px}
+  .stat{background:#f7f7f7;border-radius:10px;padding:12px;text-align:center}
+  .stat span{display:block;color:#666;font-size:12px}
+  .stat b{display:block;font-size:28px;margin-top:4px;color:#111}
+  .stats2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .stat2{background:#E8F5E9;border-radius:10px;padding:12px;text-align:center}
+  .stat2 span{display:block;color:#555;font-size:12px}
+  .stat2 b{display:block;font-size:24px;margin-top:4px;color:#111}
+  #graficaTitulo{margin-top:22px;text-align:center}
+  #graficaTitulo h3{margin:0;color:#333}
+  #graficaTitulo p{color:#333!important;font-size:14px;margin:6px 0 0;line-height:1.5}
+  canvas{width:100%;max-height:300px;margin-top:10px;border:1px solid #eee;border-radius:8px}
+  .author{text-align:center;margin-top:15px;font-size:12px;color:#888}
+  @media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}.stats2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
-<div class="firma">
-  <b>Christian Lagunes</b>
-  Licencia MIT
-</div>
-
+<div class="firma"><b>Christian Lagunes</b>Licencia MIT</div>
 <div class="card">
   <h1>Simulador MonteCarlo - Pokemon TCG Pocket</h1>
   <div class="subtitle">¿Cuántos sobres necesitas para completar una expansion?</div>
-
   <label for="expansion">Elige tu expansión:</label>
   <select id="expansion"></select>
-
   <label for="simulaciones">Número de simulaciones (ej. 1000):</label>
   <input type="number" id="simulaciones" value="1000" min="10" max="10000">
-
   <label for="sobresIniciales">¿Cuántos sobres ya abriste? (opcional, deja 0 si vas desde cero):</label>
   <input type="number" id="sobresIniciales" value="0" min="0">
-
   <label for="cartasQueTengo">¿Cuántas cartas diferentes ya tienes? (opcional):</label>
   <input type="number" id="cartasQueTengo" value="0" min="0">
-
   <button onclick="simular()">CALCULAR</button>
-
   <div id="faltanSobres">Aquí te voy a decir cuántos sobres te faltan para completar tu colección.</div>
-
   <div class="stats">
     <div class="stat"><span>Media (promedio)</span><b id="media">-</b></div>
     <div class="stat"><span>Mediana</span><b id="mediana">-</b></div>
     <div class="stat"><span>P90 (90% lo logra con)</span><b id="p90">-</b></div>
     <div class="stat"><span>Máximo</span><b id="maximo">-</b></div>
   </div>
-
   <div class="stats2">
-    <div class="stat2">
-      <span>Cartas repetidas en promedio (duplicadas que te sobran)</span>
-      <b id="repetidas">-</b>
-    </div>
-    <div class="stat2">
-      <span>Benchmark uniforme (si Todas salieran igual)</span>
-      <b id="benchmark">-</b>
-    </div>
+    <div class="stat2"><span>Cartas repetidas en promedio (duplicadas que te sobran)</span><b id="repetidas">-</b></div>
+    <div class="stat2"><span>Benchmark uniforme (si Todas salieran igual)</span><b id="benchmark">-</b></div>
   </div>
-
-  <div id="graficaTitulo">
-    <h3>¿Cuántos sobres necesitas en realidad?</h3>
-      <p>Hicimos 1,000  o 10,000 veces el experimento de abrir sobres hasta completar la colección. 
-      Cada barrita es un grupo de personas con la misma suerte. La barrita más alta es la suerte que más se repite.</p>
-  </div>
+  <div id="graficaTitulo"><h3>¿Cuántos sobres necesitas en realidad?</h3><p>Hicimos 1,000 o 10,000 veces el experimento de abrir sobres hasta completar la colección. Cada barrita es un grupo de personas con la misma suerte. La barrita más alta es la suerte que más se repite.</p></div>
   <canvas id="grafico" width="800" height="300"></canvas>
-
   <div id="resultado"></div>
   <div class="author">Christian Lagunes - Licencia MIT</div>
 </div>
 
 <script>
-function mediana(arr) {
-  const s = [...arr].sort((a, b) => a - b);
-  const m = Math.floor(s.length / 2);
-  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
-}
+const mediana = arr => { const s=[...arr].sort((a,b)=>a-b), m=Math.floor(s.length/2); return s.length%2 ? s[m] : (s[m-1]+s[m])/2; };
+const percentil = (arr,p) => { const s=[...arr].sort((a,b)=>a-b); return s[Math.floor(s.length*p/100)]; };
+const benchmarkUniforme = n => { let h=0; for(let i=1;i<=n;i++) h+=1/i; return (n*h)/5; };
 
-function percentil(arr, p) {
-  const s = [...arr].sort((a, b) => a - b);
-  return s[Math.floor(s.length * p / 100)];
-}
-
-function benchmarkUniforme(n) {
-  let h = 0;
-  for (let i = 1; i <= n; i++) h += 1 / i;
-  return (n * h) / 5;
-}
-
-function dibujarGrafico(datos) {
-  const c = document.getElementById('grafico');
-  const ctx = c.getContext('2d');
-  ctx.clearRect(0, 0, c.width, c.height);
-  if (!datos.length) return;
-  const min = Math.min(...datos);
-  const max = Math.max(...datos);
-  const bins = 20;
-  const ancho = (max - min) / bins || 1;
-  const conteo = new Array(bins).fill(0);
-  datos.forEach(v => {
-    let i = Math.floor((v - min) / ancho);
-    if (i >= bins) i = bins - 1;
-    conteo[i]++;
+function dibujarGrafico(datos){
+  const c=document.getElementById('grafico'), ctx=c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);
+  if(!datos.length) return;
+  const min=Math.min(...datos), max=Math.max(...datos), bins=20, ancho=(max-min)/bins||1, conteo=new Array(bins).fill(0);
+  datos.forEach(v=>{ let i=Math.floor((v-min)/ancho); if(i>=bins) i=bins-1; conteo[i]++; });
+  const maxC=Math.max(...conteo);
+  ctx.fillStyle='#2A75BB';
+  conteo.forEach((v,i)=>{
+    const h=(v/maxC)*(c.height-40);
+    ctx.fillRect(i*(c.width/bins)+2, c.height-20-h, (c.width/bins)-4, h);
+    ctx.fillStyle='#000'; ctx.font='11px Arial'; ctx.fillText(v, i*(c.width/bins)+5, c.height-24-h); ctx.fillStyle='#2A75BB';
   });
-  const maxC = Math.max(...conteo);
-  ctx.fillStyle = '#2A75BB';
-  conteo.forEach((v, i) => {
-    const h = (v / maxC) * (c.height - 40);
-    ctx.fillRect(i * (c.width / bins) + 2, c.height - 20 - h, (c.width / bins) - 4, h);
-    ctx.fillStyle = '#000';
-    ctx.font = '11px Arial';
-    ctx.fillText(v, i * (c.width / bins) + 5, c.height - 24 - h);
-    ctx.fillStyle = '#2A75BB';
-  });
-  ctx.fillStyle = '#000';
-  ctx.font = '12px Arial';
-  ctx.fillText(min + ' sobres', 5, c.height - 5);
-  ctx.fillText(max + ' sobres', c.width - 80, c.height - 5);
+  ctx.fillStyle='#000'; ctx.font='12px Arial';
+  ctx.fillText(min+' sobres',5,c.height-5); ctx.fillText(max+' sobres',c.width-80,c.height-5);
 }
-// ===== Serie A y B =====
 
+// ===== EXP - ÓPTIMO =====
 const EXP = {
-  // Serie A
-  Isla: {
-    c123: [["♦",32,61.48],["♦♦",28,30.83],["♦♦♦",4,7.07],["♦♦♦♦",4,0.62]],
-    c4: [["♦♦",28,80.22],["♦♦♦",4,15.8],["♦♦♦♦",4,3.05],["★",11,0.76],["★★",6,0.15],["★★★",1,0.02]],
-    c5: [["♦♦",28,46.15],["♦♦♦",4,28.85],["♦♦♦♦",4,14.36],["★",11,9.0],["★★",6,1.54],["★★★",1,0.10]]
-  },
-  Luz: {
-    c123: [["♦",31,50.47],["♦♦",33,40.87],["♦♦♦",10,8.17],["♦♦♦♦",1,0.49]],
-    c4: [["♦♦",33,80.45],["♦♦♦",10,12.40],["♦♦♦♦",1,6.62],["★",17,0.50],["★★",4,0.03]],
-    c5: [["♦♦",33,46.05],["♦♦♦",10,23.70],["♦♦♦♦",1,17.46],["★",17,12.03],["★★",4,0.76]]
-  },
-  Festival: {
-    c123: [["♦",32,100]],
-    c4: [["♦♦",22,88.99],["♦♦♦",9,4.95],["♦♦♦♦",9,1.665],["★",6,2.568],["★★",17,0.493],["★★★",1,0.222],["✨",10,0.71],["✨✨",4,0.332],["👑",1,0.07]],
-    c5: [["♦♦",22,56.0],["♦♦♦",9,19.809],["♦♦♦♦",9,6.66],["★",6,10.284],["★★",17,1.989],["★★★",1,0.888],["✨",10,2.85],["✨✨",4,1.332],["👑",1,0.188]]
-  },
-  Crisis: {
-    c123: [["♦",32,100]],
-    c4: [["♦♦",24,88.99],["♦♦♦",8,4.952],["♦♦♦♦",5,1.665],["★",6,2.568],["★★",12,0.492],["★★★",1,0.222],["✨",10,0.71],["✨✨",4,0.332],["👑",1,0.069]],
-    c5: [["♦♦",24,56.0],["♦♦♦",8,19.808],["♦♦♦♦",5,6.66],["★",6,10.284],["★★",12,1.992],["★★★",1,0.888],["✨",10,2.85],["✨✨",4,1.332],["👑",1,0.186]]
-  },
-  Eevee: {
-    c123: [["♦",32,100]],
-    c4: [["♦♦",23,88.99],["♦♦♦",8,4.952],["♦♦♦♦",6,1.662],["★",9,2.565],["★★",13,0.494],["★★★",1,0.222],["✨",10,0.71],["✨✨",4,0.332],["👑",1,0.073]],
-    c5: [["♦♦",23,56.0],["♦♦♦",8,19.808],["♦♦♦♦",6,6.66],["★",9,10.287],["★★",13,1.989],["★★★",1,0.888],["✨",10,2.85],["✨✨",4,1.332],["👑",1,0.186]]
-  },
-  Manantial: {
-    c123: [["♦",32,100]],
-    c4: [["♦♦",23,88.99],["♦♦♦",11,4.952],["♦♦♦♦",5,1.665],["★",6,2.57],["★★",12,0.492],["★★★",1,0.222],["✨",10,0.71],["✨✨",4,0.332],["👑",1,0.067]],
-    c5: [["♦♦",23,56.0],["♦♦♦",11,19.808],["♦♦♦♦",5,6.66],["★",6,10.285],["★★",12,1.992],["★★★",1,0.888],["✨",10,2.85],["✨✨",4,1.332],["👑",1,0.185]]
-  },
-  // Serie B
-  Fuego: {
-    c123: [["♦",32,100]],
-    c4: [["♦♦",24,89.99],["♦♦♦",8,5],["♦♦♦♦",5,0.925],["★",6,2.568],["★★",11,0.495],["★★★",1,0.222],["👑",2,0.04]],
-    c5: [["♦♦",24,60],["♦♦♦",8,20],["♦♦♦♦",5,6.665],["★",6,10.284],["★★",11,1.991],["★★★",1,0.888],["👑",2,0.158]]
-  },
-  Desfile: {
-    c123: [["♦",66,100]],
-    c4: [["♦♦",51,89.99],["♦♦♦",28,5],["♦♦♦♦",10,1.667],["★",24,2.572],["★★",23,0.5],["★★★",2,0.222],["👑",2,0.04]],
-    c5: [["♦♦",51,59.998],["♦♦♦",28,20],["♦♦♦♦",10,6.667],["★",24,10.286],["★★",23,2],["★★★",2,0.889],["👑",2,0.16]]
-  },
-  Encantos: {
-    c123: [["♦",43,100]],
-    c4: [["♦♦",33,89.99],["♦♦♦",12,5],["♦♦♦♦",5,1.667],["★",6,2.572],["★★",15,0.5],["★★★",1,0.222],["👑",2,0.04]],
-    c5: [["♦♦",33,59.998],["♦♦♦",12,20],["♦♦♦♦",5,6.667],["★",6,10.286],["★★",15,2],["★★★",1,0.889],["👑",2,0.16]]
-  },
-  Megavariocolor: {
-    c123: [["♦",33,100]],
-    c4: [["♦♦",23,89.99],["♦♦♦",8,5],["♦♦♦♦",5,1.667],["★",6,2.572],["★★",9,0.5],["★★★",1,0.222],["👑",2,0.04]],
-    c5: [["♦♦",23,59.998],["♦♦♦",8,20],["♦♦♦♦",5,6.667],["★",6,10.286],["★★",9,2],["★★★",1,0.889],["👑",2,0.16]]
-  },
-  Aura: {
-    c123: [["♦",65,100]],
-    c4: [["♦♦",51,89.99],["♦♦♦",29,5],["♦♦♦♦",10,1.667],["★",24,2.572],["★★",23,0.5],["★★★",2,0.222],["👑",2,0.04]],
-    c5: [["♦♦",51,59.998],["♦♦♦",29,20],["♦♦♦♦",10,6.667],["★",24,10.286],["★★",23,2],["★★★",2,0.889],["👑",2,0.16]]
-  },
-  Impulso: {
-    c123: [["♦",32,100]],
-    c4: [["♦♦",25,89.99],["♦♦♦",12,5],["♦♦♦♦",5,1.667],["★",6,2.572],["★★",12,0.5],["★★★",1,0.222],["👑",2,0.04]],
-    c5: [["♦♦",25,59.998],["♦♦♦",12,20],["♦♦♦♦",5,6.667],["★",6,10.286],["★★",12,2],["★★★",1,0.889],["👑",2,0.16]]
-  },
-  Maravillas: {
-    c123: [["♦",29,100]],
-    c4: [["♦♦",27,89.99],["♦♦♦",8,5],["♦♦♦♦",5,1.667],["★",8,2.572],["★★",12,0.499],["★★★",1,0.222],["👑",2,0.04]],
-    c5: [["♦♦",27,59.998],["♦♦♦",8,20],["♦♦♦♦",5,6.667],["★",8,10.286],["★★",12,2],["★★★",1,0.889],["👑",2,0.16]]
-  },
-  Dominador: {
-    c123: [["♦",66,100]],
-    c4: [["♦♦",51,89.99],["♦♦♦",28,5],["♦♦♦♦",10,1.667],["★",24,2.572],["★★",22,0.5],["★★★",2,0.222],["👑",2,0.04]],
-    c5: [["♦♦",51,59.998],["♦♦♦",28,20],["♦♦♦♦",10,6.667],["★",24,10.286],["★★",22,2],["★★★",2,0.889],["👑",2,0.16]]
-  },
-  Rocket: {
-    c123: [["♦",32,100]],
-    c4: [["♦♦",26,89.99],["♦♦♦",8,5],["♦♦♦♦",6,1.667],["★",6,2.572],["★★",15,0.5],["★★★",1,0.222],["👑",2,0.04]],
-    c5: [["♦♦",26,59.998],["♦♦♦",8,20],["♦♦♦♦",6,6.667],["★",6,10.286],["★★",15,2],["★★★",1,0.889],["👑",2,0.16]]
-  }
+  Isla:{c123:[["♦",32,61.48],["♦♦",28,30.83],["♦♦♦",4,7.07],["♦♦♦♦",4,0.62]],c4:[["♦♦",28,80.22],["♦♦♦",4,15.8],["♦♦♦♦",4,3.05],["★",11,0.76],["★★",6,0.15],["★★★",1,0.02]],c5:[["♦♦",28,46.15],["♦♦♦",4,28.85],["♦♦♦♦",4,14.36],["★",11,9.0],["★★",6,1.54],["★★★",1,0.10]]},
+  Luz:{c123:[["♦",31,50.47],["♦♦",33,40.87],["♦♦♦",10,8.17],["♦♦♦♦",1,0.49]],c4:[["♦♦",33,80.45],["♦♦♦",10,12.40],["♦♦♦♦",1,6.62],["★",17,0.50],["★★",4,0.03]],c5:[["♦♦",33,46.05],["♦♦♦",10,23.70],["♦♦♦♦",1,17.46],["★",17,12.03],["★★",4,0.76]]},
+  Festival:{c123:[["♦",32,100]],c4:[["♦♦",22,88.99],["♦♦♦",9,4.95],["♦♦♦♦",9,1.665],["★",6,2.568],["★★",17,0.493],["★★★",1,0.222],["✨",10,0.71],["✨✨",4,0.332],["👑",1,0.07]],c5:[["♦♦",22,56.0],["♦♦♦",9,19.809],["♦♦♦♦",9,6.66],["★",6,10.284],["★★",17,1.989],["★★★",1,0.888],["✨",10,2.85],["✨✨",4,1.332],["👑",1,0.188]]},
+  Crisis:{c123:[["♦",32,100]],c4:[["♦♦",24,88.99],["♦♦♦",8,4.952],["♦♦♦♦",5,1.665],["★",6,2.568],["★★",12,0.492],["★★★",1,0.222],["✨",10,0.71],["✨✨",4,0.332],["👑",1,0.069]],c5:[["♦♦",24,56.0],["♦♦♦",8,19.808],["♦♦♦♦",5,6.66],["★",6,10.284],["★★",12,1.992],["★★★",1,0.888],["✨",10,2.85],["✨✨",4,1.332],["👑",1,0.186]]},
+  Eevee:{c123:[["♦",32,100]],c4:[["♦♦",23,88.99],["♦♦♦",8,4.952],["♦♦♦♦",6,1.662],["★",9,2.565],["★★",13,0.494],["★★★",1,0.222],["✨",10,0.71],["✨✨",4,0.332],["👑",1,0.073]],c5:[["♦♦",23,56.0],["♦♦♦",8,19.808],["♦♦♦♦",6,6.66],["★",9,10.287],["★★",13,1.989],["★★★",1,0.888],["✨",10,2.85],["✨✨",4,1.332],["👑",1,0.186]]},
+  Manantial:{c123:[["♦",32,100]],c4:[["♦♦",23,88.99],["♦♦♦",11,4.952],["♦♦♦♦",5,1.665],["★",6,2.57],["★★",12,0.492],["★★★",1,0.222],["✨",10,0.71],["✨✨",4,0.332],["👑",1,0.067]],c5:[["♦♦",23,56.0],["♦♦♦",11,19.808],["♦♦♦♦",5,6.66],["★",6,10.285],["★★",12,1.992],["★★★",1,0.888],["✨",10,2.85],["✨✨",4,1.332],["👑",1,0.185]]},
+  Fuego:{c123:[["♦",32,100]],c4:[["♦♦",24,89.99],["♦♦♦",8,5],["♦♦♦♦",5,0.925],["★",6,2.568],["★★",11,0.495],["★★★",1,0.222],["👑",2,0.04]],c5:[["♦♦",24,60],["♦♦♦",8,20],["♦♦♦♦",5,6.665],["★",6,10.284],["★★",11,1.991],["★★★",1,0.888],["👑",2,0.158]]},
+  Desfile:{c123:[["♦",66,100]],c4:[["♦♦",51,89.99],["♦♦♦",28,5],["♦♦♦♦",10,1.667],["★",24,2.572],["★★",23,0.5],["★★★",2,0.222],["👑",2,0.04]],c5:[["♦♦",51,59.998],["♦♦♦",28,20],["♦♦♦♦",10,6.667],["★",24,10.286],["★★",23,2],["★★★",2,0.889],["👑",2,0.16]]},
+  Encantos:{c123:[["♦",43,100]],c4:[["♦♦",33,89.99],["♦♦♦",12,5],["♦♦♦♦",5,1.667],["★",6,2.572],["★★",15,0.5],["★★★",1,0.222],["👑",2,0.04]],c5:[["♦♦",33,59.998],["♦♦♦",12,20],["♦♦♦♦",5,6.667],["★",6,10.286],["★★",15,2],["★★★",1,0.889],["👑",2,0.16]]},
+  Megavariocolor:{c123:[["♦",33,100]],c4:[["♦♦",23,89.99],["♦♦♦",8,5],["♦♦♦♦",5,1.667],["★",6,2.572],["★★",9,0.5],["★★★",1,0.222],["👑",2,0.04]],c5:[["♦♦",23,59.998],["♦♦♦",8,20],["♦♦♦♦",5,6.667],["★",6,10.286],["★★",9,2],["★★★",1,0.889],["👑",2,0.16]]},
+  Aura:{c123:[["♦",65,100]],c4:[["♦♦",51,89.99],["♦♦♦",29,5],["♦♦♦♦",10,1.667],["★",24,2.572],["★★",23,0.5],["★★★",2,0.222],["👑",2,0.04]],c5:[["♦♦",51,59.998],["♦♦♦",29,20],["♦♦♦♦",10,6.667],["★",24,10.286],["★★",23,2],["★★★",2,0.889],["👑",2,0.16]]},
+  Impulso:{c123:[["♦",32,100]],c4:[["♦♦",25,89.99],["♦♦♦",12,5],["♦♦♦♦",5,1.667],["★",6,2.572],["★★",12,0.5],["★★★",1,0.222],["👑",2,0.04]],c5:[["♦♦",25,59.998],["♦♦♦",12,20],["♦♦♦♦",5,6.667],["★",6,10.286],["★★",12,2],["★★★",1,0.889],["👑",2,0.16]]},
+  Maravillas:{c123:[["♦",29,100]],c4:[["♦♦",27,89.99],["♦♦♦",8,5],["♦♦♦♦",5,1.667],["★",8,2.572],["★★",12,0.499],["★★★",1,0.222],["👑",2,0.04]],c5:[["♦♦",27,59.998],["♦♦♦",8,20],["♦♦♦♦",5,6.667],["★",8,10.286],["★★",12,2],["★★★",1,0.889],["👑",2,0.16]]},
+  Dominador:{c123:[["♦",66,100]],c4:[["♦♦",51,89.99],["♦♦♦",28,5],["♦♦♦♦",10,1.667],["★",24,2.572],["★★",22,0.5],["★★★",2,0.222],["👑",2,0.04]],c5:[["♦♦",51,59.998],["♦♦♦",28,20],["♦♦♦♦",10,6.667],["★",24,10.286],["★★",22,2],["★★★",2,0.889],["👑",2,0.16]]},
+  Rocket:{c123:[["♦",32,100]],c4:[["♦♦",26,89.99],["♦♦♦",8,5],["♦♦♦♦",6,1.667],["★",6,2.572],["★★",15,0.5],["★★★",1,0.222],["👑",2,0.04]],c5:[["♦♦",26,59.998],["♦♦♦",8,20],["♦♦♦♦",6,6.667],["★",6,10.286],["★★",15,2],["★★★",1,0.889],["👑",2,0.16]]}
 };
 
-function sortearCarta(lista) {
-  let r = Math.random() * 100, acum = 0;
-  for (let [rare, count, total] of lista) {
-    acum += total;
-    if (r < acum) return rare + "-" + Math.floor(Math.random() * count);
+// Pre-calcula acumuladas una sola vez, güey. Así no suma en cada sorteo, güey.
+for(const k in EXP){
+  for(const slot of ['c123','c4','c5']){
+    let acum=0;
+    EXP[k][slot]=EXP[k][slot].map(([rare,count,total])=>{ acum+=total; return [rare,count,acum]; });
   }
-  let [rare, count] = lista[lista.length-1];
-  return rare + "-" + Math.floor(Math.random() * count);
+  // Pool ordenado: c123 + c4 + c5 sin duplicar. Así sabemos cuáles son las primeras n, güey.
+  const seen=new Set(), pool=[];
+  for(const slot of ['c123','c4','c5']){
+    for(const [rare,count] of EXP[k][slot]){
+      for(let i=0;i<count;i++){ const id=rare+"-"+i; if(!seen.has(id)){ seen.add(id); pool.push(id); } }
+    }
+  }
+  EXP[k].pool=pool;
 }
 
-function abrirSobrePorTipo(tipo) {
-  let e = EXP[tipo];
-  return [sortearCarta(e.c123), sortearCarta(e.c123), sortearCarta(e.c123), sortearCarta(e.c4), sortearCarta(e.c5)];
+function sortearCarta(lista){
+  const r=Math.random()*100;
+  for(let i=0;i<lista.length;i++){
+    if(r<lista[i][2]) return lista[i][0]+"-"+Math.floor(Math.random()*lista[i][1]);
+  }
+  const last=lista[lista.length-1];
+  return last[0]+"-"+Math.floor(Math.random()*last[1]);
 }
-
-function abrirSobreSegunN(n,tipo) {
-  if (EXP[tipo]) return abrirSobrePorTipo(tipo);
-  if (n === 68 || n === 86) return abrirSobrePorTipo('Isla');
-  if (n === 75 || n === 96) return abrirSobrePorTipo('Luz');
-  if (n === 72 || n === 111) return abrirSobrePorTipo('Festival');
+function abrirSobrePorTipo(tipo){
+  const e=EXP[tipo];
+  return [sortearCarta(e.c123),sortearCarta(e.c123),sortearCarta(e.c123),sortearCarta(e.c4),sortearCarta(e.c5)];
+}
+function abrirSobreSegunN(n,tipo){
+  if(EXP[tipo]) return abrirSobrePorTipo(tipo);
+  if(n===68||n===86) return abrirSobrePorTipo('Isla');
+  if(n===75||n===96) return abrirSobrePorTipo('Luz');
+  if(n===72||n===111) return abrirSobrePorTipo('Festival');
   return abrirSobrePorTipo('Isla');
 }
-  
+
 // ===== OPCIONES =====
-const OPCIONES = [
-  ["Isla", "Isla Singular", 68, 86],
-  ["Luz", "Luz Triunfal", 75, 96],
-  ["Festival", "Festival Brillante", 72, 111],
-  ["Crisis", "Crisis Dimensional", 69, 103],
-  ["Eevee", "Arboleda de Eevee", 69, 107],
-  ["Manantial", "Manantial Oculto", 71, 105],
-  ["Fuego", "Fuego Carmesí", 69, 89],
-  ["Desfile", "Desfile de Ensueño", 155, 206],
-  ["Encantos", "Encantos de Paldea", 93, 117],
-  ["Megavariocolor", "Megavariocolor", 69, 87],
-  ["Aura", "Aura Pulsante", 155, 206],
-  ["Impulso", "Impulso Paradojico", 74, 95],
-  ["Maravillas", "Maravillas Cotidianas", 69, 92],
-  ["Dominador", "Dominador de los Cielos", 155, 205],
-  ["Rocket", "La Ambición del Equipo Rocket", 72, 96],
+const OPCIONES=[
+  ["Isla","Isla Singular",68,86],["Luz","Luz Triunfal",75,96],["Festival","Festival Brillante",72,111],
+  ["Crisis","Crisis Dimensional",69,103],["Eevee","Arboleda de Eevee",69,107],["Manantial","Manantial Oculto",71,105],
+  ["Fuego","Fuego Carmesí",69,89],["Desfile","Desfile de Ensueño",155,206],["Encantos","Encantos de Paldea",93,117],
+  ["Megavariocolor","Megavariocolor",69,87],["Aura","Aura Pulsante",155,206],["Impulso","Impulso Paradojico",74,95],
+  ["Maravillas","Maravillas Cotidianas",69,92],["Dominador","Dominador de los Cielos",155,205],["Rocket","La Ambición del Equipo Rocket",72,96]
 ];
+const selExp=document.getElementById("expansion");
+selExp.innerHTML=OPCIONES.map(([tipo,nombre,col,total])=>
+  `<option value="${tipo}|${col}">${nombre} - "Colección Completa" (${col} cartas)</option><option value="${tipo}|${total}">${nombre} - Todas - 100% Completa (${total} cartas)</option>`
+).join("");
 
-const selExp = document.getElementById("expansion");
-OPCIONES.forEach(([tipo, nombre, col, total]) => {
-  selExp.innerHTML += `<option value="${tipo}|${col}">${nombre} - "Colección Completa" (${col} cartas)</option>`;
-  selExp.innerHTML += `<option value="${tipo}|${total}">${nombre} - Todas - 100% Completa (${total} cartas)</option>`;
-});  
+function simular(){
+  const [tipo,nStr]=document.getElementById('expansion').value.split('|');
+  const n=parseInt(nStr);
+  const sims=parseInt(document.getElementById('simulaciones').value)||1000;
+  const sobresYa=parseInt(document.getElementById('sobresIniciales').value)||0;
+  const cartasYa=parseInt(document.getElementById('cartasQueTengo').value)||0;
 
-    
-function simular() {
-  const sel = document.getElementById('expansion').value;
-  const [tipo, nStr] = sel.split('|');
-  const n = parseInt(nStr);
-  const sims = parseInt(document.getElementById('simulaciones').value) || 1000;
-  const sobresYa = parseInt(document.getElementById('sobresIniciales').value) || 0;
-  const cartasYa = parseInt(document.getElementById('cartasQueTengo').value) || 0;
+  // CORREGIDO, GÜEY: el objetivo son las primeras n cartas del pool, no números, güey.
+  const objetivo=new Set(EXP[tipo].pool.slice(0,n));
+  const base=EXP[tipo].pool.slice(0,Math.min(cartasYa,n));
 
-  const resultados = [];
-  const listaRepetidas = [];
-
-  for (let s = 0; s < sims; s++) {
-    const tengo = new Set();
-    for (let i = 0; i < Math.min(cartasYa, n); i++) tengo.add(i);
-    let sobres = sobresYa;
-    let repetidas = 0;
-
-    while (tengo.size < n) {
-      const sobre = abrirSobreSegunN(n,tipo);
-      sobre.forEach(c => {
-        if (c < n) {
-          if (tengo.has(c)) {
-            repetidas++;
-          } else {
-            tengo.add(c);
-          }
-        }
-      });
+  const resultados=[], listaRepetidas=[];
+  for(let s=0;s<sims;s++){
+    const tengo=new Set(base);
+    let sobres=sobresYa, repetidas=0;
+    while(tengo.size<n){
+      const sobre=abrirSobrePorTipo(tipo);
+      for(const c of sobre){
+        if(!objetivo.has(c)) continue; // carta que no cuenta para esta colección, güey.
+        if(tengo.has(c)) repetidas++;
+        else tengo.add(c);
+      }
       sobres++;
-      if (sobres > 5000) break;
+      if(sobres>5000) break;
     }
     resultados.push(sobres);
     listaRepetidas.push(repetidas);
   }
 
-  const med = resultados.reduce((a, b) => a + b, 0) / resultados.length;
-  const medn = mediana(resultados);
-  const p90 = percentil(resultados, 90);
-  const max = Math.max(...resultados);
-  const promRepetidas = listaRepetidas.reduce((a, b) => a + b, 0) / listaRepetidas.length;
-  const bench = benchmarkUniforme(n);
+  const med=resultados.reduce((a,b)=>a+b,0)/resultados.length;
+  const medn=mediana(resultados), p90=percentil(resultados,90), max=Math.max(...resultados);
+  const promRepetidas=listaRepetidas.reduce((a,b)=>a+b,0)/listaRepetidas.length;
+  const bench=benchmarkUniforme(n);
 
-  document.getElementById('media').textContent = Math.round(med);
-  document.getElementById('mediana').textContent = Math.round(medn);
-  document.getElementById('p90').textContent = Math.round(p90);
-  document.getElementById('maximo').textContent = max;
-  document.getElementById('repetidas').textContent = Math.round(promRepetidas) + ' repetidas';
-  document.getElementById('benchmark').textContent = Math.round(bench) + ' sobres';
-
-  document.getElementById('faltanSobres').textContent =
-    'Te faltan en promedio ' + Math.round(med) + ' sobres para completar tu colección.';
-
-  document.getElementById('resultado').innerHTML =
-  '<b>Resultado:</b> En promedio necesitas <b>' + Math.round(med) + ' sobres</b> para tener las ' + n + ' cartas. ' +
-  'La mitad de la gente lo logra con <b>' + Math.round(medn) + ' sobres o menos</b>. ' +
-  'Y 9 de cada 10 personas lo logran con <b>' + Math.round(p90) + ' sobres o menos</b>.<br><br>' +
-  '<b>Repetidas:</b> Cuando por fin completas la colección, en promedio te van a sobrar <b>' + Math.round(promRepetidas) + ' cartas repetidas</b>. O sea, cartas que ya tenías.<br><br>' +
-  '<b>¿Por qué tantos sobres?</b> Si Todas las cartas salieran con la misma suerte, solo necesitarías <b>' + Math.round(bench) + ' sobres</b>. ' +
-  'Pero como las raras salen menos, en realidad necesitas <b>' + Math.round(med) + ' sobres</b>, o sea <b>' + Math.round(med - bench) + ' sobres más</b> por culpa de las raras.';
-
+  document.getElementById('media').textContent=Math.round(med);
+  document.getElementById('mediana').textContent=Math.round(medn);
+  document.getElementById('p90').textContent=Math.round(p90);
+  document.getElementById('maximo').textContent=max;
+  document.getElementById('repetidas').textContent=Math.round(promRepetidas)+' repetidas';
+  document.getElementById('benchmark').textContent=Math.round(bench)+' sobres';
+  document.getElementById('faltanSobres').textContent='Te faltan en promedio '+Math.round(med)+' sobres para completar tu colección.';
+  document.getElementById('resultado').innerHTML=
+    '<b>Resultado:</b> En promedio necesitas <b>'+Math.round(med)+' sobres</b> para tener las '+n+' cartas. '+
+    'La mitad de la gente lo logra con <b>'+Math.round(medn)+' sobres o menos</b>. '+
+    'Y 9 de cada 10 personas lo logran con <b>'+Math.round(p90)+' sobres o menos</b>.<br><br>'+
+    '<b>Repetidas:</b> Cuando por fin completas la colección, en promedio te van a sobrar <b>'+Math.round(promRepetidas)+' cartas repetidas</b>. O sea, cartas que ya tenías.<br><br>'+
+    '<b>¿Por qué tantos sobres?</b> Si Todas las cartas salieran con la misma suerte, solo necesitarías <b>'+Math.round(bench)+' sobres</b>. '+
+    'Pero como las raras salen menos, en realidad necesitas <b>'+Math.round(med)+' sobres</b>, o sea <b>'+Math.round(med-bench)+' sobres más</b> por culpa de las raras.';
   dibujarGrafico(resultados);
 }
 </script>
